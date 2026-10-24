@@ -1,0 +1,25 @@
+# Maven build output
+/target/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs and generated test reports
+*.log
+/test-output/
+/surefire-reports/
+
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
