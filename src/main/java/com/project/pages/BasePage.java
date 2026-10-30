@@ -42,7 +42,7 @@ public class BasePage {
     @FindBy (css = "a[href='/contact us")
     WebElement contactUs;
 
-    @FindBy (css = "i[class='fa fa-user']/b")
+    @FindBy (css = "i[class='fa fa-user'] > b")
     WebElement loggedInAs;
 
     @FindBy (css = "#susbscribe_email")

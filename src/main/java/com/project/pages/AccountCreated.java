@@ -18,7 +18,7 @@ public class AccountCreated extends BasePage {
     @FindBy (css = "div.col-sm-9 col-sm-offset-1")
     WebElement accountCreatedDiv;
 
-    @FindBy (css = "h2[class='title text-center']/b")
+    @FindBy (css = "h2[class='title text-center'] > b")
     WebElement accountCreated;
 
     @FindBy (css = "p.font-size: 20px; font-family: garamond;")
