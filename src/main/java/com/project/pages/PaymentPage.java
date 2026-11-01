@@ -3,6 +3,7 @@ package com.project.pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class PaymentPage extends BasePage {
     WebDriver driver;
@@ -10,26 +11,27 @@ public class PaymentPage extends BasePage {
     PaymentPage(WebDriver driver) {
         super(driver);
         this.driver = driver;
+        PageFactory.initElements(driver, this);
     }
 
     @FindBy (css = "div.breadcrumbs a")
-    WebElement homeLink;
+    private WebElement homeLink;
 
     @FindBy (css = "input[name='name_on_card']")
-    WebElement nameOnCardInput;
+    private WebElement nameOnCardInput;
 
     @FindBy (css = "input[name='card_number']")
-    WebElement cardNumberInput;
+    private WebElement cardNumberInput;
 
     @FindBy (css = "input[name='cvc']")
-    WebElement cvcInput;
+    private WebElement cvcInput;
 
     @FindBy (css = "input[name='expiry_month']")
-    WebElement expirationMonthInput;
+    private WebElement expirationMonthInput;
 
     @FindBy (css = "input[name='expiry_year']")
-    WebElement expirationYearinput;
+    private WebElement expirationYearinput;
 
     @FindBy (css = "button.submit-button")
-    WebElement payAndConfirmOrderButton;
+    private WebElement payAndConfirmOrderButton;
 }

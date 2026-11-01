@@ -18,19 +18,19 @@ public class CartPage extends BasePage {
     }
 
     @FindBy (css = "div.breadcrumbs a")
-    WebElement homeLink;
+    private WebElement homeLink;
 
     @FindBy (css = ".check out")
-    WebElement checkoutLink;
+    private WebElement checkoutLink;
 
     @FindBy (css = "tr[id*='product']")
-    List<WebElement> productRows;
+    private List<WebElement> productRows;
 
-    By productName = By.cssSelector("td.cart_description a");
-    By productCategoryAndSubCategory = By.cssSelector("td.cart_description p");
-    By productUnitPrice = By.cssSelector("td.cart_price p");
-    By productTotalPrice = By.cssSelector("td.cart_total p");
-    By productQuantity = By.cssSelector("td.cart_quantity button");
-    By removeProductLink = By.cssSelector("i.fa");
+    private final By productName = By.cssSelector("td.cart_description a");
+    private final By productCategoryAndSubCategory = By.cssSelector("td.cart_description p");
+    private final By productUnitPrice = By.cssSelector("td.cart_price p");
+    private final By productTotalPrice = By.cssSelector("td.cart_total p");
+    private final By productQuantity = By.cssSelector("td.cart_quantity button");
+    private final By removeProductLink = By.cssSelector("i.fa");
 
 }

@@ -18,51 +18,51 @@ public class CheckoutPage extends BasePage {
     }
 
     @FindBy (css = "div.breadcrumbs a")
-    WebElement homeLink;
+    private WebElement homeLink;
 
     @FindBy (css = "li.address_firstname")
-    WebElement customerNameDelivery;
+    private WebElement customerNameDelivery;
 
     @FindBy (css = "li.address_address1:nth-child(2)")
-    WebElement customerAddressDelivery;
+    private WebElement customerAddressDelivery;
 
     @FindBy (css = "li.address_city")
-    WebElement customerCityStateZipDelivery;
+    private WebElement customerCityStateZipDelivery;
 
     @FindBy (css = "li.address_country_name")
-    WebElement customercountryNameDelivery;
+    private WebElement customercountryNameDelivery;
 
     @FindBy (css = "li.address_phone")
-    WebElement customerPhonenumberDelivery;
+    private WebElement customerPhonenumberDelivery;
 
     @FindBy (css = "li.address_firstname")
-    WebElement customerNameBilling;
+    private WebElement customerNameBilling;
 
     @FindBy (css = "li.address_address1:nth-child(2)")
-    WebElement customerAddressBilling;
+    private WebElement customerAddressBilling;
 
     @FindBy (css = "li.address_city")
-    WebElement customerCityStateZipBilling;
+    private WebElement customerCityStateZipBilling;
 
     @FindBy (css = "li.address_country_name")
-    WebElement customercountryNameBilling;
+    private WebElement customercountryNameBilling;
 
     @FindBy (css = "li.address_phone")
-    WebElement customerPhonenumberBilling;
+    private WebElement customerPhonenumberBilling;
 
     @FindBy (css = "tr[id*='product']")
-    List<WebElement> productRows;
+    private List<WebElement> productRows;
 
     @FindBy (css = "div.ordermsg textarea")
-    WebElement orderCommentInput;
+    private WebElement orderCommentInput;
 
     @FindBy (css = "a[href='/payment']")
-    WebElement placeOrderLink;
+    private WebElement placeOrderLink;
 
-    By productName = By.cssSelector("td.cart_description a");
-    By productCategoryAndSubCategory = By.cssSelector("td.cart_description p");
-    By productUnitPrice = By.cssSelector("td.cart_price p");
-    By productTotalPrice = By.cssSelector("td.cart_total p");
-    By productQuantity = By.cssSelector("td.cart_quantity button");
+    private final By productName = By.cssSelector("td.cart_description a");
+    private final By productCategoryAndSubCategory = By.cssSelector("td.cart_description p");
+    private final By productUnitPrice = By.cssSelector("td.cart_price p");
+    private final By productTotalPrice = By.cssSelector("td.cart_total p");
+    private final By productQuantity = By.cssSelector("td.cart_quantity button");
 
 }
