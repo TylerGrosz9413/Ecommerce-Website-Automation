@@ -40,17 +40,17 @@ public class AccountCreated extends BasePage {
     //By secondLine = By.cssSelector("p.font-size: 20px; font-family: garamond;[2]");
 
     public String getAccountCreatedText() {
-        waitForWebElementToBeVisible(accountCreatedHeader);
+        waitForWebElementToAppear(accountCreatedHeader);
         return accountCreatedHeader.getText();
     }
 
     public String getCreationMessageTextFirstLine() {
-        waitForWebElementToBeVisible(creationMessage.get(0));
+        waitForWebElementToAppear(creationMessage.get(0));
         return creationMessage.get(0).getText();
     }
 
     public String getCreationMessageTextSecondLine() {
-        waitForWebElementToBeVisible(creationMessage.get(1));
+        waitForWebElementToAppear(creationMessage.get(1));
         return creationMessage.get(1).getText();
     }
 

@@ -13,46 +13,121 @@ public class BasePage {
     WebDriver driver;
 
     @FindBy (css = "img[alt='Website for automation practice']")
-    WebElement automationExerciseLink;
+    private WebElement automationExerciseLink;
 
     @FindBy (css = "a[href='/']")
-    WebElement home;
+    private WebElement homeLink;
 
     @FindBy (css = "a[href='/products']")
-    WebElement products;
+    private WebElement productsLink;
 
     @FindBy (css = "a[href='/view cart']")
-    WebElement cart;
+    private WebElement cartLink;
 
-    @FindBy (css = "a[href='/logout']")
-    WebElement logout;
+    /* @FindBy (css = "a[href='/logout']")
+    WebElement logout; */
 
-    @FindBy (css = "a[href='/delete account")
-    WebElement deleteAccount;
+    /* @FindBy (css = "a[href='/delete account']")
+    WebElement deleteAccount; */
 
-    @FindBy (css = "a[href='/test cases")
-    WebElement testcases;
+    @FindBy (css = "a[href='/test cases']")
+    private WebElement testcasesLink;
 
-    @FindBy (css = "a[href='/api list")
-    WebElement apiTesting;
+    @FindBy (css = "a[href='/api list']")
+    private WebElement apiTestingLink;
 
-    @FindBy (css = "a[href='/https://www.youtube.com/c/AutomationExercise")
-    WebElement videoTutorials;
+    @FindBy (css = "a[href='/https://www.youtube.com/c/AutomationExercise']")
+    private WebElement videoTutorialsLink;
 
-    @FindBy (css = "a[href='/contact us")
-    WebElement contactUs;
+    @FindBy (css = "a[href='/contact us']")
+    private WebElement contactUsLink;
 
-    @FindBy (css = "i[class='fa fa-user'] > b")
-    WebElement loggedInAs;
+    /* @FindBy (css = "i[class='fa fa-user'] > b")
+    WebElement loggedInAs; */
 
     @FindBy (css = "#susbscribe_email")
-    WebElement subscribeEmail;
+    private WebElement subscribeEmailInput;
 
     @FindBy (css = "#subscribe")
-    WebElement subscribeButton;
+    private WebElement subscribeButton;
+
+    private final By logoutLink = By.cssSelector("a[href='/logout']");
+    private final By deleteAccountLink = By.cssSelector("a[href='/delete account']");
+    private final By loggedInAsNonNavigableLink = By.cssSelector("i[class='fa fa-user'] > b");
+    private final By signUpLoginLink = By.cssSelector("a[href='/login']");
     
     public BasePage(WebDriver driver) {
         this.driver = driver;
+    }
+
+    public LoginSignUp clickLogoutLink() {
+        waitForElementToAppear(logoutLink);
+        driver.findElement(logoutLink).click();
+        return new LoginSignUp(driver);
+    }
+    
+    public AccountDeleted clickDeleteAccountLink() {
+        waitForElementToAppear(deleteAccountLink);
+        driver.findElement(deleteAccountLink).click();
+        return new AccountDeleted(driver);
+    }
+
+    public LoginSignUp clickSignUpLoginLink() {
+        waitForElementToAppear(signUpLoginLink);
+        driver.findElement(signUpLoginLink).click();
+        return new LoginSignUp(driver);
+    }
+
+    public ProductCatalog clickHomeLink() {
+        waitForWebElementToAppear(homeLink);
+        homeLink.click();
+        return new ProductCatalog(driver);
+    }
+
+    public ProductCatalog clickProductsLink() {
+        waitForWebElementToAppear(productsLink);
+        productsLink.click();
+        return new ProductCatalog(driver);
+    }
+
+    public CartPage clickCartLink() {
+        waitForWebElementToAppear(cartLink);
+        cartLink.click();
+        return new CartPage(driver);
+    }
+
+    public void clickTestcasesLink() {
+        waitForWebElementToAppear(testcasesLink);
+        testcasesLink.click();
+    }
+
+    public void clickApiTestingLink() {
+        waitForWebElementToAppear(apiTestingLink);
+        apiTestingLink.click();
+    }
+
+    public void clickVideoTutorialsLink() {
+        waitForWebElementToAppear(videoTutorialsLink);
+        videoTutorialsLink.click();
+    }
+
+    public void clickContactUsLink() {
+        waitForWebElementToAppear(contactUsLink);
+        contactUsLink.click();
+    }
+
+    public void subscribeWithEmail(String email) {
+        waitForWebElementToAppear(subscribeEmailInput);
+        subscribeEmailInput.sendKeys(email);
+        waitForWebElementToAppear(subscribeButton);
+        subscribeButton.click();
+    }
+
+    public String getloggedInAsUserName() {
+        waitForElementToAppear(loggedInAsNonNavigableLink);
+        String loggedInAsText = driver.findElement(loggedInAsNonNavigableLink).getText();
+        String username = loggedInAsText.split("Logged in as ")[1].trim();
+        return username;
     }
 
     public void waitForElementToAppear(By locator) {
@@ -70,7 +145,7 @@ public class BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
-    public void waitForWebElementToBeVisible(WebElement ele) {
+    public void waitForWebElementToAppear(WebElement ele) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.visibilityOf(ele));
     }
