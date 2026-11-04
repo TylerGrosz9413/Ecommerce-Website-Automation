@@ -77,18 +77,18 @@ public class ProductCatalog extends BasePage {
     private List<WebElement> brandLinks;
 
     private final By subCategoties = By.cssSelector("a[data-toggle='collapse'] li a");
-    private final By addToCartButton = By.cssSelector("a.add-to-cart");
+    private final By addToCartLinkHover = By.cssSelector("a.add-to-cart");
     private final By productBox = By.cssSelector("div.productinfo");
     private final By viewProductLink = By.cssSelector("a[href*='/product details/']");
-    private final By productPriceBeforeHover = By.cssSelector("div.productinfo > h2");
-    private final By productNameBeforeHover = By.cssSelector("div.productinfo > p");
+    private final By productPriceBeforeHover = By.cssSelector("div.features_items div.productinfo > h2");
+    private final By productNameBeforeHover = By.cssSelector("div.features_items div.productinfo > p");
     private final By productPriceHover = By.cssSelector("div.productinfo div.overlay-content > h2");
     private final By productNameHover = By.cssSelector("div.productinfo div.overlay-content > p");
     private final By addedToCartPopUp = By.cssSelector("div.modal-content");
-    private final By viewCart = By.cssSelector("div.modal-content a[href='/view cart']");
-    private final By continueShopping = By.cssSelector("div.modal-content button.btn-success");
-    private final By addedHeader = By.cssSelector("div.modal-content h4.modal-title");
-    private final By addedMessage = By.cssSelector("div.modal-content p");
+    private final By viewCartAddedToCartPopUp = By.cssSelector("div.modal-content a[href='/view cart']");
+    private final By continueShoppingAddedToCartPopUp = By.cssSelector("div.modal-content button.btn-success");
+    private final By addedToCartHeader = By.cssSelector("div.modal-content h4.modal-title");
+    private final By addedToCartMessage = By.cssSelector("div.modal-content p");
     private final By dressSubCategoryLink = By.linkText("Dress ");
     private final By topsSubCategoryLink = By.linkText("Tops ");
     private final By sareeSubCategoryLink = By.linkText("Saree ");
@@ -200,21 +200,82 @@ public class ProductCatalog extends BasePage {
     public List<WebElement> getProductNamesHover() {
         return driver.findElements(productNameHover);
     }
+
+    public void searchProduct(String productName) {
+        waitForWebElementToAppear(searchProductInput);
+        searchProductInput.clear();
+        searchProductInput.sendKeys(productName);
+        waitForWebElementToBeClickable(searchProductButton);
+        searchProductButton.click();
+    }
+
+    public String getAddedToCartHeaderText() {
+        WebElement addedToCartHeaderElement = driver.findElement(addedToCartHeader);
+        waitForWebElementToAppear(addedToCartHeaderElement);
+        return addedToCartHeaderElement.getText();
+    }
+
+    public String getAddedToCartMessageText() {
+        WebElement addedToCartMessageElement = driver.findElement(addedToCartMessage);
+        waitForWebElementToAppear(addedToCartMessageElement);
+        return addedToCartMessageElement.getText();
+    }
+
+    public void clickViewCartInAddedToCartPopUp() {
+        WebElement viewCartButton = driver.findElement(viewCartAddedToCartPopUp);
+        waitForWebElementToBeClickable(viewCartButton);
+        viewCartButton.click();
+    }
+
+    public void clickContinueShoppingInAddedToCartPopUp() {
+        WebElement continueShoppingButton = driver.findElement(continueShoppingAddedToCartPopUp);
+        waitForWebElementToBeClickable(continueShoppingButton);
+        continueShoppingButton.click();
+    }
+
+    public boolean addedToCartPopUpIsDisplayed() {
+        WebElement addedToCartPopUpElement = driver.findElement(addedToCartPopUp);
+        waitForWebElementToAppear(addedToCartPopUpElement);
+        return addedToCartPopUpElement.isDisplayed();
+    }
+
+    public String getProductNameHover() {
+        WebElement productNameHoverElement = driver.findElement(productNameHover);
+        waitForWebElementToAppear(productNameHoverElement);
+        return productNameHoverElement.getText();
+    }
+
+    public String getProductPriceHover() {
+        WebElement productPriceHoverElement = driver.findElement(productPriceHover);
+        waitForWebElementToAppear(productPriceHoverElement);
+        return productPriceHoverElement.getText();
+    }
+
+    public void clickViewProductLinkHover(String productName) {
+        hoverOverProductCardByName(productName);
+        WebElement viewProductLinkElement = driver.findElement(viewProductLink);
+        waitForWebElementToBeClickable(viewProductLinkElement);
+        viewProductLinkElement.click();
+    }
     
+    public void addProductToCartHover(String productName) {
+        hoverOverProductCardByName(productName);
+        WebElement addToCartLink = driver.findElement(addToCartLinkHover);
+        waitForWebElementToBeClickable(addToCartLink);
+        addToCartLink.click();
+    }
 
     public void hoverOverProductCardByName(String productName) {
         //List<WebElement> productCards = driver.findElements(By.cssSelector("div.features_items > div.col-sm-4"));
         Actions actions = new Actions(driver);
-
+        waitForWebElementToAppear(productCards.get(0)); // Wait for at least one product card to appear
         for (WebElement productCard : productCards) {
             actions.moveToElement(productCard).perform();
             waitForWebElementToAppear(productCard.findElement(productNameHover));
 
-            List<WebElement> hoveredProductNames = driver.findElements(productNameHover);
-            for (WebElement hoveredProductName : hoveredProductNames) {
-                if (hoveredProductName.getText().trim().equalsIgnoreCase(productName.trim())) {
-                    return;
-                }
+            WebElement hoveredProductName = driver.findElement(productNameHover);
+            if (hoveredProductName.getText().trim().equalsIgnoreCase(productName.trim())) {
+                return;
             }
         }
 
