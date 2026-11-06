@@ -190,15 +190,13 @@ public class ProductCatalog extends BasePage {
     }
 
     public List<WebElement> getProductNamesBeforeHover() {
+        waitForWebElementToAppear(productCards.get(0)); // Wait for at least one product card to appear
         return driver.findElements(productNameBeforeHover);
     }
 
     public List<WebElement> getProductPricesBeforeHover() {
+        waitForWebElementToAppear(productCards.get(0)); // Wait for at least one product card to appear
         return driver.findElements(productPriceBeforeHover);
-    }
-
-    public List<WebElement> getProductNamesHover() {
-        return driver.findElements(productNameHover);
     }
 
     public void searchProduct(String productName) {
@@ -210,24 +208,29 @@ public class ProductCatalog extends BasePage {
     }
 
     public String getAddedToCartHeaderText() {
+        waitForElementToAppear(addedToCartPopUp);
         WebElement addedToCartHeaderElement = driver.findElement(addedToCartHeader);
         waitForWebElementToAppear(addedToCartHeaderElement);
         return addedToCartHeaderElement.getText();
     }
 
     public String getAddedToCartMessageText() {
+        waitForElementToAppear(addedToCartPopUp);
         WebElement addedToCartMessageElement = driver.findElement(addedToCartMessage);
         waitForWebElementToAppear(addedToCartMessageElement);
         return addedToCartMessageElement.getText();
     }
 
-    public void clickViewCartInAddedToCartPopUp() {
+    public CartPage clickViewCartInAddedToCartPopUp() {
+        waitForElementToAppear(addedToCartPopUp);
         WebElement viewCartButton = driver.findElement(viewCartAddedToCartPopUp);
         waitForWebElementToBeClickable(viewCartButton);
         viewCartButton.click();
+        return new CartPage(driver);
     }
 
     public void clickContinueShoppingInAddedToCartPopUp() {
+        waitForElementToAppear(addedToCartPopUp);
         WebElement continueShoppingButton = driver.findElement(continueShoppingAddedToCartPopUp);
         waitForWebElementToBeClickable(continueShoppingButton);
         continueShoppingButton.click();
@@ -235,7 +238,6 @@ public class ProductCatalog extends BasePage {
 
     public boolean addedToCartPopUpIsDisplayed() {
         WebElement addedToCartPopUpElement = driver.findElement(addedToCartPopUp);
-        waitForWebElementToAppear(addedToCartPopUpElement);
         return addedToCartPopUpElement.isDisplayed();
     }
 
@@ -251,11 +253,11 @@ public class ProductCatalog extends BasePage {
         return productPriceHoverElement.getText();
     }
 
-    public void clickViewProductLinkHover(String productName) {
-        hoverOverProductCardByName(productName);
+    public ProductPage clickViewProductLink(String productName) {
         WebElement viewProductLinkElement = driver.findElement(viewProductLink);
         waitForWebElementToBeClickable(viewProductLinkElement);
         viewProductLinkElement.click();
+        return new ProductPage(driver);
     }
     
     public void addProductToCartHover(String productName) {

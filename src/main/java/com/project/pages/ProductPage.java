@@ -1,5 +1,6 @@
 package com.project.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -43,5 +44,52 @@ public class ProductPage extends ProductCatalog {
 
     @FindBy (css = "#button-review")
     private WebElement productReviewSubmitButton;
+
+    private final By productReviewSuccessMessage = By.cssSelector(".alert-success > span");
+
+    public String getProductPrice() {
+        waitForWebElementToAppear(productPrice);
+        return productPrice.getText();
+    }
+
+    public String getProductAvailability() {
+        waitForWebElementToAppear(productAvailability);
+        return productAvailability.getText();
+    }
+
+    public String getProductCondition() {
+        waitForWebElementToAppear(productCondition);
+        return productCondition.getText();
+    }
+
+    public String getProductBrand() {
+        waitForWebElementToAppear(productBrand);
+        return productBrand.getText();
+    }
+
+    public void addProductToCart() {
+        waitForWebElementToBeClickable(addToCartButton);
+        addToCartButton.click();
+    }
+
+    public void submitProductReview(String name, String email, String review) {
+        waitForWebElementToAppear(productReviewNameInput);
+        productReviewNameInput.sendKeys(name);
+        productReviewEmailInput.sendKeys(email);
+        productReviewInput.sendKeys(review);
+        waitForWebElementToBeClickable(productReviewSubmitButton);
+        productReviewSubmitButton.click();
+    }
+
+    public String getProductReviewSuccessMessage() {
+        waitForElementToAppear(productReviewSuccessMessage);
+        return driver.findElement(productReviewSuccessMessage).getText();
+    }
+
+    public void setProductQuantity(int quantity) {
+        waitForWebElementToAppear(productQuantity);
+        productQuantity.clear();
+        productQuantity.sendKeys(String.valueOf(quantity));
+    }
     
 }

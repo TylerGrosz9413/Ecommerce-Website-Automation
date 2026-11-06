@@ -1,5 +1,6 @@
 package com.project.pages;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -31,30 +32,46 @@ public class HomePage extends ProductCatalog {
     private final By productCard = By.cssSelector("div.productinfo");
     private final By addToCartLink = By.cssSelector("a.add-to-cart");
 
-    public List<WebElement> getRecommendedItemProductCards() {
+    public List<WebElement> getRecommendedItemsProductCards() {
+        waitForWebElementToAppear(recommendedItemsCarouselDiv);
         return recommendedItemsCarouselDiv.findElements(productCard);
     }
 
-    public List<WebElement> getRecommendedItemProductNames() {
-        return recommendedItemsCarouselDiv.findElements(productNameInCard);
+    public List<String> getRecommendedItemsProductNames() {
+        waitForWebElementToAppear(recommendedItemsCarouselDiv);
+        List<WebElement> productCards = getRecommendedItemsProductCards();
+        return productCards.stream().map(card -> card.findElement(productNameInCard).getText()).toList();
     }
 
-    public List<WebElement> getRecommendedItemProductPrices() {
-        return recommendedItemsCarouselDiv.findElements(productPriceInCard);
+    public List<String> getRecommendedItemsProductPrices() {
+        waitForWebElementToAppear(recommendedItemsCarouselDiv);
+        List<WebElement> productCards = getRecommendedItemsProductCards();
+        return productCards.stream().map(card -> card.findElement(productPriceInCard).getText()).toList();
     }
 
-    public List<WebElement> getvisibleRecommendedItemProductCards() {
-        List<WebElement> productCards = getRecommendedItemProductCards();
+    public List<WebElement> getVisibleRecommendedItemsProductCards() {
+        List<WebElement> productCards = getRecommendedItemsProductCards();
         return productCards.stream().filter(WebElement::isDisplayed).toList();
     }
 
+    public boolean isRecommendedItemsProductVisible(String productName) {
+        List<WebElement> productCards = getVisibleRecommendedItemsProductCards();
+        for (WebElement card : productCards) {
+            if (card.findElement(productNameInCard).getText().equals(productName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String getProductPrice(String productName) {
-        List<WebElement> productPrices = getRecommendedItemProductPrices();
-        List<WebElement> productNames = getRecommendedItemProductNames();
+        waitForWebElementToAppear(recommendedItemsCarouselDiv);
+        List<String> productPrices = getRecommendedItemsProductPrices();
+        List<String> productNames = getRecommendedItemsProductNames();
 
         for (int i = 0; i < productNames.size(); i++) {
-            if (productNames.get(i).getText().equals(productName)) {
-                return productPrices.get(i).getText();
+            if (productNames.get(i).equals(productName)) {
+                return productPrices.get(i);
             }
         }
 
@@ -62,7 +79,8 @@ public class HomePage extends ProductCatalog {
     }
 
     public void addProductToCart(String productName) {
-        List<WebElement> productCards = getRecommendedItemProductCards();
+        waitForWebElementToAppear(recommendedItemsCarouselDiv);
+        List<WebElement> productCards = getRecommendedItemsProductCards();
         WebElement productCard = null;
         for (WebElement card : productCards) {
             if (card.findElement(productNameInCard).getText().equals(productName)) {
@@ -72,6 +90,9 @@ public class HomePage extends ProductCatalog {
         }
         if (productCard == null) {
             throw new RuntimeException("Product not found: " + productName);
+        }
+        while (!productCard.isDisplayed()) {
+            clickSlideRightRecommendedItemControl();
         }
         WebElement addToCartLinkElement = productCard.findElement(addToCartLink);
         waitForWebElementToBeClickable(addToCartLinkElement);
@@ -89,7 +110,6 @@ public class HomePage extends ProductCatalog {
     }
 
     public boolean recommendedItemsCarouselIsDisplayed() {
-        waitForWebElementToAppear(recommendedItemsCarouselDiv);
         return recommendedItemsCarouselDiv.isDisplayed();
     }
 
