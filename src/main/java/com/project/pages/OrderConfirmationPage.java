@@ -21,9 +21,30 @@ public class OrderConfirmationPage extends BasePage {
     private WebElement continueButton;
 
     @FindBy (css = "h2.title b")
-    private WebElement orderPlaceText;
+    private WebElement orderPlacedText;
 
     @FindBy (css = "h2.title p")
     private WebElement confirmationMessageText;
+
+    public String getOrderPlacedText() {
+        waitForWebElementToAppear(orderPlacedText);
+        return orderPlacedText.getText();
+    }
+
+    public String getConfirmationMessageText() {
+        waitForWebElementToAppear(confirmationMessageText);
+        return confirmationMessageText.getText();
+    }
+
+    public void clickDownloadInvoiceButton() {
+        waitForWebElementToAppear(downloadInvoiceButton);
+        downloadInvoiceButton.click();
+    }
+
+    public HomePage clickContinueButton() {
+        waitForWebElementToAppear(continueButton);
+        continueButton.click();
+        return new HomePage(driver);
+    }
 
 }

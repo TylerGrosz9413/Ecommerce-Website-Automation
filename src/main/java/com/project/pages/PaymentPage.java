@@ -34,4 +34,57 @@ public class PaymentPage extends BasePage {
 
     @FindBy (css = "button.submit-button")
     private WebElement payAndConfirmOrderButton;
+
+    @FindBy (css = "div.alert-success")
+    private WebElement successMessage;
+
+    public void enterPaymentDetails(String nameOnCard, String cardNumber, String cvc, String expirationMonth, String expirationYear) {
+        waitForWebElementToAppear(nameOnCardInput);
+        nameOnCardInput.sendKeys(nameOnCard);
+        cardNumberInput.sendKeys(cardNumber);
+        cvcInput.sendKeys(cvc);
+        expirationMonthInput.sendKeys(expirationMonth);
+        expirationYearinput.sendKeys(expirationYear);
+    }
+
+    public void clickPayAndConfirmOrderButton() {
+        waitForWebElementToAppear(payAndConfirmOrderButton);
+        payAndConfirmOrderButton.click();
+    }
+
+    public String getNameOnCard() {
+        waitForWebElementToAppear(nameOnCardInput);
+        return nameOnCardInput.getAttribute("value");
+    }
+
+    public String getCardNumber() {
+        waitForWebElementToAppear(cardNumberInput);
+        return cardNumberInput.getAttribute("value");
+    }
+
+    public String getCVC() {
+        waitForWebElementToAppear(cvcInput);
+        return cvcInput.getAttribute("value");
+    }
+
+    public String getExpirationMonth() {
+        waitForWebElementToAppear(expirationMonthInput);
+        return expirationMonthInput.getAttribute("value");
+    }
+
+    public String getExpirationYear() {
+        waitForWebElementToAppear(expirationYearinput);
+        return expirationYearinput.getAttribute("value");
+    }
+
+    public HomePage clickHomeLink() {
+        waitForWebElementToAppear(homeLink);
+        homeLink.click();
+        return new HomePage(driver);
+    }
+
+    public String getSuccessMessage() {
+        waitForWebElementToAppear(successMessage);
+        return successMessage.getText();
+    }
 }

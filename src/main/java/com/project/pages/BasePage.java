@@ -78,10 +78,10 @@ public class BasePage {
         return new LoginSignUp(driver);
     }
 
-    public ProductCatalog clickHomeLink() {
+    public HomePage clickHomeLink() {
         waitForWebElementToAppear(homeLink);
         homeLink.click();
-        return new ProductCatalog(driver);
+        return new HomePage(driver);
     }
 
     public ProductCatalog clickProductsLink() {

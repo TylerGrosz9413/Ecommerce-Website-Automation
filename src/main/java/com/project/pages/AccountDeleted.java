@@ -29,5 +29,26 @@ public class AccountDeleted extends BasePage {
     @FindBy (css = "div.google-anno-skip")
     private WebElement shoppingLink;
 
+    public String getAccountDeletedHeader() {
+        waitForWebElementToAppear(accountDeletedHeader);
+        return accountDeletedHeader.getText();
+    }
+
+    public String getAccountDeletedMessageTextFirstLine() {
+        waitForWebElementToAppear(accountDeletedMessage.get(0));
+        return accountDeletedMessage.get(0).getText();
+    }
+
+    public String getAccountDeletedMessageTextSecondLine() {
+        waitForWebElementToAppear(accountDeletedMessage.get(1));
+        return accountDeletedMessage.get(1).getText();
+    }
+
+    public HomePage clickContinue() {
+        waitForWebElementToBeClickable(continueButton);
+        continueButton.click();
+        return new HomePage(driver);
+    }
+
     
 }

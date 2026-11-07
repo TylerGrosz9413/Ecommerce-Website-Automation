@@ -39,7 +39,7 @@ public class AccountCreated extends BasePage {
     //By firstLine = By.cssSelector("p.font-size: 20px; font-family: garamond;[1]");
     //By secondLine = By.cssSelector("p.font-size: 20px; font-family: garamond;[2]");
 
-    public String getAccountCreatedText() {
+    public String getAccountCreatedHeader() {
         waitForWebElementToAppear(accountCreatedHeader);
         return accountCreatedHeader.getText();
     }
@@ -54,9 +54,10 @@ public class AccountCreated extends BasePage {
         return creationMessage.get(1).getText();
     }
 
-    public void clickContinue() {
+    public HomePage clickContinue() {
         waitForWebElementToBeClickable(continueButton);
         continueButton.click();
+        return new HomePage(driver);
     }
 
     public void clickAccountCreationServiceLink() {

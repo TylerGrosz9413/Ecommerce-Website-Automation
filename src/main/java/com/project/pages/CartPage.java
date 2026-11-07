@@ -54,10 +54,10 @@ public class CartPage extends BasePage {
         return rows.stream().map(row -> row.findElement(productUnitPrice).getText()).toList();
     }
 
-    public List<String> getProductQuantities() {
+    public List<Integer> getProductQuantities() {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
-        return rows.stream().map(row -> row.findElement(productQuantity).getText()).toList();
+        return rows.stream().map(row -> Integer.parseInt(row.findElement(productQuantity).getText())).toList();
     }
 
     public List<String> getProductTotalPrices() {
@@ -133,12 +133,12 @@ public class CartPage extends BasePage {
         throw new RuntimeException("Product not found in cart: " + productName);
     }
 
-    public String getProductQuantity(String productName) {
+    public Integer getProductQuantity(String productName) {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
         for (WebElement row : rows) {
             if (row.findElement(this.productName).getText().equals(productName)) {
-                return row.findElement(productQuantity).getText();
+                return Integer.parseInt(row.findElement(productQuantity).getText());
             }
         }
         throw new RuntimeException("Product not found in cart: " + productName);
