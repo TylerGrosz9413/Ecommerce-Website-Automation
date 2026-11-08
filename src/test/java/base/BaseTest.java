@@ -11,13 +11,15 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 
+import com.project.pages.HomePage;
 import com.project.pages.LoginSignUp;
 
 public class BaseTest {
     public WebDriver driver;
-    public LoginSignUp loginSignUp;
+    public HomePage homePage;
 
     public WebDriver initializeDriver() throws IOException {
         Properties prop = new Properties();
@@ -60,22 +62,20 @@ public class BaseTest {
     }
 
     @BeforeMethod (alwaysRun = true)
-    public LoginSignUp setUp() throws IOException {
+    public HomePage setUp() throws IOException {
         driver = initializeDriver();
-        loginSignUp = new LoginSignUp(driver);
-        launchApplication();
-        loginSignUp.goToLoginSignUpPage();
-        //loginSignUp.waitForWebElementToAppear(loginSignUp.);
-        return loginSignUp;
+        homePage = new HomePage(driver);
+        return homePage;
     }
 
     public void launchApplication() {
         driver.get("https://automationexercise.com/");
     }
 
+    @AfterMethod (alwaysRun = true)
     public void tearDown() {
         if (driver != null) {
-            driver.quit();
+            //driver.quit();
         }
     }
 }

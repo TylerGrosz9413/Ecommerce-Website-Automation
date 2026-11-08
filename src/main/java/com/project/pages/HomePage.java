@@ -18,6 +18,12 @@ public class HomePage extends ProductCatalog {
         PageFactory.initElements(driver, this);
     }
 
+    @FindBy (css = ".test_cases_list > button")
+    private WebElement testCasesButton;
+
+    @FindBy (css = "apis_list > button")
+    private WebElement apiPracticeButton;
+
     @FindBy (css = "#recommended-item-carousel")
     private WebElement recommendedItemsCarouselDiv;
 
@@ -50,11 +56,13 @@ public class HomePage extends ProductCatalog {
     }
 
     public List<WebElement> getVisibleRecommendedItemsProductCards() {
+        waitForWebElementToAppear(recommendedItemsCarouselDiv);
         List<WebElement> productCards = getRecommendedItemsProductCards();
         return productCards.stream().filter(WebElement::isDisplayed).toList();
     }
 
     public boolean isRecommendedItemsProductVisible(String productName) {
+        waitForWebElementToAppear(recommendedItemsCarouselDiv);
         List<WebElement> productCards = getVisibleRecommendedItemsProductCards();
         for (WebElement card : productCards) {
             if (card.findElement(productNameInCard).getText().equals(productName)) {
@@ -109,8 +117,13 @@ public class HomePage extends ProductCatalog {
         slideRightRecommendedItemControl.click();
     }
 
-    public boolean recommendedItemsCarouselIsDisplayed() {
+    public boolean isRecommendedItemsCarouselDisplayed() {
+        waitForWebElementToAppear(recommendedItemsCarouselDiv);
         return recommendedItemsCarouselDiv.isDisplayed();
+    }
+
+    public boolean isHomePageDisplayed() {
+        return isRecommendedItemsCarouselDisplayed();
     }
 
 }

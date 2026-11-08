@@ -210,14 +210,12 @@ public class ProductCatalog extends BasePage {
     public String getAddedToCartHeaderText() {
         waitForElementToAppear(addedToCartPopUp);
         WebElement addedToCartHeaderElement = driver.findElement(addedToCartHeader);
-        waitForWebElementToAppear(addedToCartHeaderElement);
         return addedToCartHeaderElement.getText();
     }
 
     public String getAddedToCartMessageText() {
         waitForElementToAppear(addedToCartPopUp);
         WebElement addedToCartMessageElement = driver.findElement(addedToCartMessage);
-        waitForWebElementToAppear(addedToCartMessageElement);
         return addedToCartMessageElement.getText();
     }
 
@@ -232,38 +230,38 @@ public class ProductCatalog extends BasePage {
     public void clickContinueShoppingInAddedToCartPopUp() {
         waitForElementToAppear(addedToCartPopUp);
         WebElement continueShoppingButton = driver.findElement(continueShoppingAddedToCartPopUp);
-        waitForWebElementToBeClickable(continueShoppingButton);
         continueShoppingButton.click();
     }
 
     public boolean addedToCartPopUpIsDisplayed() {
+        waitForElementToAppear(addedToCartPopUp);
         WebElement addedToCartPopUpElement = driver.findElement(addedToCartPopUp);
         return addedToCartPopUpElement.isDisplayed();
     }
 
     public String getProductNameHover() {
+        waitForElementToAppear(productNameHover);
         WebElement productNameHoverElement = driver.findElement(productNameHover);
-        waitForWebElementToAppear(productNameHoverElement);
         return productNameHoverElement.getText();
     }
 
     public String getProductPriceHover() {
+        waitForElementToAppear(productPriceHover);
         WebElement productPriceHoverElement = driver.findElement(productPriceHover);
-        waitForWebElementToAppear(productPriceHoverElement);
         return productPriceHoverElement.getText();
     }
 
     public ProductPage clickViewProductLink(String productName) {
+        waitForElementToAppear(viewProductLink);
         WebElement viewProductLinkElement = driver.findElement(viewProductLink);
-        waitForWebElementToBeClickable(viewProductLinkElement);
         viewProductLinkElement.click();
         return new ProductPage(driver);
     }
     
     public void addProductToCartHover(String productName) {
         hoverOverProductCardByName(productName);
+        waitForElementToAppear(addToCartLinkHover);
         WebElement addToCartLink = driver.findElement(addToCartLinkHover);
-        waitForWebElementToBeClickable(addToCartLink);
         addToCartLink.click();
     }
 

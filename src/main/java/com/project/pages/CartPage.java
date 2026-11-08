@@ -167,6 +167,7 @@ public class CartPage extends BasePage {
     }
 
     public boolean isRegisterLoginLinkPopUpPresent() {
+        waitForElementToAppear(registerLoginLinkPopUp);
         return driver.findElement(registerLoginLinkPopUp).isDisplayed();
     }
 
@@ -177,6 +178,7 @@ public class CartPage extends BasePage {
     }
 
     public boolean isContinueOnCartBtnPopUpPresent() {
+        waitForElementToAppear(continueOnCartBtnPopUp);
         return driver.findElement(continueOnCartBtnPopUp).isDisplayed();
     }
 
@@ -191,6 +193,7 @@ public class CartPage extends BasePage {
     }
 
     public boolean isEmptyCartProductsLinkPresent() {
+        waitForElementToAppear(emptyCartProductsLink);
         return driver.findElement(emptyCartProductsLink).isDisplayed();
     }
 

@@ -12,7 +12,8 @@ public class CartTest extends BaseTest {
     public void testCartFunctionality() {
         // Test steps for cart functionality
         
-        ProductCatalog productCatalog = loginSignUp.login("tt@hotmail.com", "pressone");
+        launchApplication();
+        ProductCatalog productCatalog = homePage.clickProductsLink();
         
     }
 

@@ -1,5 +1,6 @@
 package com.project.pages;
 
+import java.io.IOException;
 import java.time.Duration;
 
 import org.openqa.selenium.Alert;
@@ -61,7 +62,7 @@ public class ContactUs extends BasePage {
         submitButton.click();
     }
 
-    public void uploadFile(String filePath) {
+    public void uploadFile(String filePath) throws IOException {
         waitForWebElementToBeClickable(uploadFileInput);
         uploadFileInput.click();
 
@@ -72,10 +73,15 @@ public class ContactUs extends BasePage {
             throw new IllegalStateException("Interrupted while waiting for the upload dialog to appear.", e);
         }
 
-        uploadFileInput.sendKeys(filePath);
+        String autoItExecutablePath = "src\\main\\resources\\AutoIT\\UploadFile.exe";
+        String[] autoItExecutablePathArray = autoItExecutablePath.split(" ");
+        Runtime.getRuntime().exec(autoItExecutablePathArray);
+
+        submitFormAndAcceptAlert();
     }
 
     public void submitFormAndAcceptAlert() {
+        waitForWebElementToBeClickable(submitButton);
         submitButton.click();
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
@@ -93,17 +99,7 @@ public class ContactUs extends BasePage {
         alert.accept(); // Click OK
     }
 
-    public void validateSuccessMessage() {
-        waitForElementToAppear(successMessage);
-        if (!driver.findElement(successMessage).isDisplayed()) {
-            throw new AssertionError("Success message is not displayed");
-        }
-        if (!driver.findElement(successMessage).getText().contains("Success! Your details have been submitted successfully.")) {
-            throw new AssertionError("Unexpected success message text: " + driver.findElement(successMessage).getText());
-        }
-    }
-
-    public boolean homeButtonIsDisplayed() {
+    public boolean isHomeButtonDisplayed() {
         waitForElementToAppear(homeButton);
         return driver.findElement(homeButton).isDisplayed();
     }
@@ -113,9 +109,10 @@ public class ContactUs extends BasePage {
         feedbackEmailLink.click();
     }
 
-    public void clickHomeButton() {
+    public HomePage clickHomeButton() {
         waitForElementToBeClickable(homeButton);
         driver.findElement(homeButton).click();
+        return new HomePage(driver);
     }
 
 }

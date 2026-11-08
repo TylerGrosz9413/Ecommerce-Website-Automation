@@ -150,12 +150,14 @@ public class EnterAccountInfo extends BasePage {
     }
 
     public void selectDateOfBirth(String day, String month, String year) {
+        waitForWebElementToAppear(dobDaysDropdown);
         selectDropdownOptionByVisibleText(dobDaysDropdown, day);
         selectDropdownOptionByVisibleText(dobMonthsDropdown, month);
         selectDropdownOptionByVisibleText(dobYearsDropdown, year);
     }
 
     public void selectCountry(String country) {
+        waitForWebElementToAppear(countryDropdown);
         selectDropdownOptionByVisibleText(countryDropdown, country);
     }
 
