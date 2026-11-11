@@ -1,8 +1,10 @@
 package com.project.pages;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -52,8 +54,9 @@ public class BasePage {
     private WebElement subscribeButton;
 
     private final By logoutLink = By.cssSelector("a[href='/logout']");
-    private final By deleteAccountLink = By.cssSelector("a[href='/delete account']");
-    private final By loggedInAsNonNavigableLink = By.cssSelector("i[class='fa fa-user'] > b");
+    private final By deleteAccountLink = By.cssSelector("a[href='/delete_account']");
+    private final By loggedInAsUsername = By.cssSelector("i.fa-user + b");
+    private final By loggedInAsNonNavigableLink = By.xpath("//a[.//i[contains(concat(' ', normalize-space(@class), ' '), ' fa-user ')]]");
     private final By signUpLoginLink = By.cssSelector("a[href='/login']");
     
     public BasePage(WebDriver driver) {
@@ -123,11 +126,56 @@ public class BasePage {
         subscribeButton.click();
     }
 
-    public String getloggedInAsUserName() {
+    public String getLoggedInAsText() {
         waitForElementToAppear(loggedInAsNonNavigableLink);
         String loggedInAsText = driver.findElement(loggedInAsNonNavigableLink).getText();
-        String username = loggedInAsText.split("Logged in as ")[1].trim();
+        return loggedInAsText;
+    }
+
+    public String getloggedInAsUserName() {
+        waitForElementToAppear(loggedInAsNonNavigableLink);
+        String username = driver.findElement(loggedInAsNonNavigableLink).getText();
+        //String username = loggedInAsText.split("Logged in as ")[1].trim();
         return username;
+    }
+
+    public void closeAdIfPresent() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        // 1) Try to close known ad close buttons
+        List<By> closeButtonLocators = List.of(
+            By.id("dismiss-button"),
+            By.cssSelector("#dismiss-button"),
+            By.cssSelector("[id*='dismiss-button']"),
+            By.cssSelector("[class*='close-button']"),
+            By.cssSelector("button.close"),
+            By.xpath("//*[contains(@id, 'dismiss') or contains(@class, 'close-button')]")
+        );
+
+        for (By locator : closeButtonLocators) {
+            try {
+                List<WebElement> elements = driver.findElements(locator);
+                for (WebElement el : elements) {
+                    try {
+                        if (el.isDisplayed()) {
+                            wait.until(ExpectedConditions.elementToBeClickable(el)).click();
+                            return;
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        // 2) If ad iframe is still covering the page, hide it
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript(
+            "var elements = document.querySelectorAll('iframe[id*=\"aswift\"], iframe[id*=\"google_ads_iframe\"], [id*=\"ad\"], [class*=\"ad\"]'); " +
+            "for (var i = 0; i < elements.length; i++) { " +
+            "   try { elements[i].style.display = 'none'; } catch (e) {} " +
+            "}"
+        );
     }
 
     public void waitForElementToAppear(By locator) {

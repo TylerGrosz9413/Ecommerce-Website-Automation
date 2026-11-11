@@ -15,6 +15,9 @@ public class EnterAccountInfo extends BasePage {
         PageFactory.initElements(driver, this);
     }
 
+    @FindBy(xpath = "//h2[@class='title text-center']//b[contains(text(),'Enter Account Information')]")
+    private WebElement enterAccountInfoText;
+
     @FindBy (css = "#id_gender1")
     private WebElement mrRadioButton;
 
@@ -78,6 +81,11 @@ public class EnterAccountInfo extends BasePage {
     @FindBy (css = "button[data-qa='create-account']")
     private WebElement createAccountButton;
 
+    public String getEnterAccountInfoText() {
+        waitForWebElementToAppear(enterAccountInfoText);
+        return enterAccountInfoText.getText();
+    }
+
     public void enterAccountInfo(String title, String password, String dobDay, String dobMonth, String dobYear, boolean newsletterSubscription, boolean specialOffers) {
         waitForWebElementToAppear(passwordInput);
         selectTitle(title);
@@ -87,7 +95,7 @@ public class EnterAccountInfo extends BasePage {
         setReceiveOffers(specialOffers);
     }
 
-    public void enterAddressInfo(String firstName, String lastName, String address1, String address2, String country, String state, String city, String zip, String mobilePhone) {
+    public void enterAddressInfo(String firstName, String lastName, String company, String address1, String address2, String country, String state, String city, String zip, String mobilePhone) {
         waitForWebElementToAppear(firstNameInput);
         firstNameInput.sendKeys(firstName);
         lastNameInput.sendKeys(lastName);
@@ -179,9 +187,10 @@ public class EnterAccountInfo extends BasePage {
         }
     }
 
-    public void clickCreateAccountButton() {
+    public AccountCreated clickCreateAccountButton() {
         waitForWebElementToBeClickable(createAccountButton);
         createAccountButton.click();
+        return new AccountCreated(driver);
     }
 
     public void selectDropdownOptionByVisibleText(WebElement dropdown, String visibleText) {

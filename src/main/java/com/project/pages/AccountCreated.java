@@ -20,8 +20,8 @@ public class AccountCreated extends BasePage {
     @FindBy (css = "div.col-sm-9 col-sm-offset-1")
     private WebElement accountCreatedDiv;
 
-    @FindBy (css = "h2.title > b")
-    private WebElement accountCreatedHeader;
+    //@FindBy (css = "h2.title > b")
+    //private WebElement accountCreatedHeader;
 
     @FindBy (css = "div.col-sm-9 > p")
     private List<WebElement> creationMessage;
@@ -35,13 +35,14 @@ public class AccountCreated extends BasePage {
     @FindBy (css = "a[data-qa='continue-button']")
     private WebElement continueButton;
 
+    private final By accountCreatedHeader = By.cssSelector("h2.title > b");
     //By accountCreated = By.cssSelector("h2[class='title text-center']/b");
     //By firstLine = By.cssSelector("p.font-size: 20px; font-family: garamond;[1]");
     //By secondLine = By.cssSelector("p.font-size: 20px; font-family: garamond;[2]");
 
     public String getAccountCreatedHeader() {
-        waitForWebElementToAppear(accountCreatedHeader);
-        return accountCreatedHeader.getText();
+        waitForElementToAppear(accountCreatedHeader);
+        return driver.findElement(accountCreatedHeader).getText();
     }
 
     public String getCreationMessageTextFirstLine() {
