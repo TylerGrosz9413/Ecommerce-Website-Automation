@@ -1,5 +1,6 @@
 package com.project.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -16,6 +17,9 @@ public class PaymentPage extends BasePage {
 
     @FindBy (css = "div.breadcrumbs a")
     private WebElement homeLink;
+
+    @FindBy (css = "h2.heading")
+    private WebElement paymentHeader;
 
     @FindBy (css = "input[name='name_on_card']")
     private WebElement nameOnCardInput;
@@ -35,8 +39,12 @@ public class PaymentPage extends BasePage {
     @FindBy (css = "button.submit-button")
     private WebElement payAndConfirmOrderButton;
 
-    @FindBy (css = "div.alert-success")
-    private WebElement successMessage;
+    private final By successMessage = By.cssSelector("div.alert-success");
+
+    public String getPaymentHeader() {
+        waitForWebElementToAppear(paymentHeader);
+        return paymentHeader.getText();
+    }
 
     public void enterPaymentDetails(String nameOnCard, String cardNumber, String cvc, String expirationMonth, String expirationYear) {
         waitForWebElementToAppear(nameOnCardInput);
@@ -84,7 +92,7 @@ public class PaymentPage extends BasePage {
     }
 
     public String getSuccessMessage() {
-        waitForWebElementToAppear(successMessage);
-        return successMessage.getText();
+        waitForElementToAppear(successMessage);
+        return driver.findElement(successMessage).getText();
     }
 }

@@ -15,6 +15,12 @@ public class ProductPage extends ProductCatalog {
         PageFactory.initElements(driver, this);
     }
 
+    @FindBy (css = ".product-information > h2")
+    private WebElement productName;
+
+    @FindBy (css = "div.product-information > p:nth-of-type(1)")
+    private WebElement productCategorySubcategory;
+
     @FindBy (css = ".product-information > span > span")
     private WebElement productPrice;
 
@@ -46,6 +52,27 @@ public class ProductPage extends ProductCatalog {
     private WebElement productReviewSubmitButton;
 
     private final By productReviewSuccessMessage = By.cssSelector(".alert-success > span");
+
+    public String getProductName() {
+        waitForWebElementToAppear(productName);
+        return productName.getText();
+    }
+
+    public String getProductCategory() {
+        waitForWebElementToAppear(productCategorySubcategory);
+        String text = productCategorySubcategory.getText();
+        return text.replaceFirst("^Category:\\s*", "")
+                   .split("\\s*>\\s*")[0]
+                   .trim();
+    }
+
+    public String getProductSubcategory() {
+        waitForWebElementToAppear(productCategorySubcategory);
+        String text = productCategorySubcategory.getText();
+        return text.replaceFirst("^Category:\\s*", "")
+                   .split("\\s*>\\s*")[1]
+                   .trim();
+    }
 
     public String getProductPrice() {
         waitForWebElementToAppear(productPrice);

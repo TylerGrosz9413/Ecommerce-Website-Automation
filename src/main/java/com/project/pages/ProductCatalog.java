@@ -76,6 +76,7 @@ public class ProductCatalog extends BasePage {
     @FindBy (css = "ul.nav > li")
     private List<WebElement> brandLinks;
 
+    private final By productsHeader = By.cssSelector(".features_items > h2.title");
     private final By subCategoties = By.cssSelector("a[data-toggle='collapse'] li a");
     private final By addToCartLinkHover = By.cssSelector("a.add-to-cart");
     private final By productBox = By.cssSelector("div.productinfo");
@@ -99,6 +100,11 @@ public class ProductCatalog extends BasePage {
 
     //WebElement dress = driver.findElement(By.xpath("//div[contains(.,'Dress')]"));
 
+    public String getProductsHeaderText() {
+        waitForElementToAppear(productsHeader);
+        return driver .findElement(productsHeader).getText();
+    }
+
     public void clickWomenCategoryHeaderToggle() {
         waitForWebElementToBeClickable(womenCategoryHeaderToggle);
         womenCategoryHeaderToggle.click();
@@ -114,79 +120,94 @@ public class ProductCatalog extends BasePage {
         kidsCategoryHeaderToggle.click();
     }
 
-    public void clickPoloBrandLink() {
+    public BrandsPage clickPoloBrandLink() {
         waitForWebElementToBeClickable(poloBrandLink);
         poloBrandLink.click();
+        return new BrandsPage(driver);
     }
 
-    public void clickHMBandLink() {
+    public BrandsPage clickHMBandLink() {
         waitForWebElementToBeClickable(hmBrandlink);
         hmBrandlink.click();
+        return new BrandsPage(driver);
     }
 
-    public void clickMadameBrandLink() {
+    public BrandsPage clickMadameBrandLink() {
         waitForWebElementToBeClickable(madameBrandLink);
         madameBrandLink.click();
+        return new BrandsPage(driver);
     }
 
-    public void clickMastHarbourBrandLink() {
+    public BrandsPage clickMastHarbourBrandLink() {
         waitForWebElementToBeClickable(mastHarbourBrandLink);
         mastHarbourBrandLink.click();
+        return new BrandsPage(driver);
     }
 
-    public void clickBabyHugBrandLink() {
+    public BrandsPage clickBabyHugBrandLink() {
         waitForWebElementToBeClickable(babyHugBrandLink);
         babyHugBrandLink.click();
+        return new BrandsPage(driver);
     }
 
-    public void clickAllenSollyJrBrandLink() {
+    public BrandsPage clickAllenSollyJrBrandLink() {
         waitForWebElementToBeClickable(allenSollyJrBrandLink);
         allenSollyJrBrandLink.click();
+        return new BrandsPage(driver);
     }
 
-    public void clickKookieKidsBrandLink() {
+    public BrandsPage clickKookieKidsBrandLink() {
         waitForWebElementToBeClickable(kookieKidsBrandLink);
         kookieKidsBrandLink.click();
+        return new BrandsPage(driver);
     }
 
-    public void clickBibaBrandLink() {
+    public BrandsPage clickBibaBrandLink() {
         waitForWebElementToBeClickable(bibaBrandLink);
         bibaBrandLink.click();
+        return new BrandsPage(driver);
     }
 
-    public void clickDressSubCategoryLink() {
+    public CategorySubcategoryPage clickDressSubCategoryLink() {
         waitForElementToBeClickable(dressSubCategoryLink);
         driver.findElement(dressSubCategoryLink).click();
+        return new CategorySubcategoryPage(driver);
     }
 
-    public void clickTopsSubCategoryLink() {
+    public CategorySubcategoryPage clickTopsSubCategoryLink() {
         waitForElementToBeClickable(topsSubCategoryLink);
         driver.findElement(topsSubCategoryLink).click();
+        return new CategorySubcategoryPage(driver);
     }
 
-    public void clickSareeSubCategoryLink() {
+    public CategorySubcategoryPage clickSareeSubCategoryLink() {
         waitForElementToBeClickable(sareeSubCategoryLink);
         driver.findElement(sareeSubCategoryLink).click();
+        return new CategorySubcategoryPage(driver);
     }
 
-    public void clickTShirtsSubCategoryLink() {
+    public CategorySubcategoryPage clickTShirtsSubCategoryLink() {
         waitForElementToBeClickable(tShirtsSubCategoryLink);
         driver.findElement(tShirtsSubCategoryLink).click();
+        return new CategorySubcategoryPage(driver);
     }
 
-    public void clickJeansSubCategoryLink() {
+    public CategorySubcategoryPage clickJeansSubCategoryLink() {
         waitForElementToBeClickable(jeansSubCategoryLink);
         driver.findElement(jeansSubCategoryLink).click();
+        return new CategorySubcategoryPage(driver);
     }
 
-    public void clickKidsDressSubCategoryLink() {
+    public CategorySubcategoryPage clickKidsDressSubCategoryLink() {
         waitForElementToBeClickable(kidsdressSubCategoryLink);
         driver.findElement(kidsdressSubCategoryLink).click();
+        return new CategorySubcategoryPage(driver);
     }
 
-    public void clickTopsTShirtsSubCategoryLink() {
+    public CategorySubcategoryPage clickTopsTShirtsSubCategoryLink() {
         waitForElementToBeClickable(topsTShirtsSubCategoryLink);
         driver.findElement(topsTShirtsSubCategoryLink).click();
+        return new CategorySubcategoryPage(driver);
     }
 
     public List<WebElement> getProductNamesBeforeHover() {
