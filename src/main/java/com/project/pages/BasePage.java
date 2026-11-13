@@ -134,8 +134,8 @@ public class BasePage {
 
     public String getloggedInAsUserName() {
         waitForElementToAppear(loggedInAsNonNavigableLink);
-        String username = driver.findElement(loggedInAsNonNavigableLink).getText();
-        //String username = loggedInAsText.split("Logged in as ")[1].trim();
+        String loggedInAsText = driver.findElement(loggedInAsNonNavigableLink).getText();
+        String username = loggedInAsText.split("Logged in as ")[1].trim();
         return username;
     }
 

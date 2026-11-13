@@ -19,6 +19,9 @@ public class ContactUs extends BasePage {
         this.driver = driver;
     }
 
+    @FindBy (css = "h2[title='Contact Us']")
+    private WebElement contactUsHeader;
+
     @FindBy (css = "input[name='name']")
     private WebElement nameInput;
 
@@ -42,6 +45,11 @@ public class ContactUs extends BasePage {
 
     private final By successMessage = By.cssSelector(".alert-success");
     private final By homeButton = By.cssSelector(".btn-success");
+
+    public String getContactUsHeaderText() {
+        waitForWebElementToAppear(contactUsHeader);
+        return contactUsHeader.getText();
+    }
 
     public void fillForm(String name, String email, String subject, String message) {
         waitForWebElementToAppear(nameInput);

@@ -29,7 +29,7 @@ public class AccountDeleted extends BasePage {
     @FindBy (css = "div.google-anno-skip")
     private WebElement shoppingLink;
 
-    public String getAccountDeletedHeader() {
+    public String getAccountDeletedHeaderText() {
         waitForWebElementToAppear(accountDeletedHeader);
         return accountDeletedHeader.getText();
     }

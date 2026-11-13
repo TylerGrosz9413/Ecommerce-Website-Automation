@@ -24,6 +24,12 @@ public class HomePage extends ProductCatalog {
     @FindBy (css = "apis_list > button")
     private WebElement apiPracticeButton;
 
+    @FindBy (css = ".features_items > h2.title")
+    private WebElement featuresItemsHeader;
+
+    @FindBy (css = "div.recommended_items > h2.title")
+    private WebElement recommendeditemsHeader;
+
     @FindBy (css = "#recommended-item-carousel")
     private WebElement recommendedItemsCarouselDiv;
 
@@ -37,6 +43,16 @@ public class HomePage extends ProductCatalog {
     private final By productPriceInCard = By.cssSelector("div.productinfo > h2");
     private final By productCard = By.cssSelector("div.productinfo");
     private final By addToCartLink = By.cssSelector("a.add-to-cart");
+
+    public String getFeaturesItemsHeaderText() {
+        waitForWebElementToAppear(featuresItemsHeader);
+        return featuresItemsHeader.getText();
+    }
+
+    public String getRecommendedItemsHeaderText() {
+        waitForWebElementToAppear(recommendeditemsHeader);
+        return recommendeditemsHeader.getText();
+    }
 
     public List<WebElement> getRecommendedItemsProductCards() {
         waitForWebElementToAppear(recommendedItemsCarouselDiv);

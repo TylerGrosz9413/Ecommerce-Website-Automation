@@ -40,7 +40,7 @@ public class AccountCreated extends BasePage {
     //By firstLine = By.cssSelector("p.font-size: 20px; font-family: garamond;[1]");
     //By secondLine = By.cssSelector("p.font-size: 20px; font-family: garamond;[2]");
 
-    public String getAccountCreatedHeader() {
+    public String getAccountCreatedHeaderText() {
         waitForElementToAppear(accountCreatedHeader);
         return driver.findElement(accountCreatedHeader).getText();
     }

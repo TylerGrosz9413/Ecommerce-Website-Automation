@@ -1,6 +1,7 @@
 package com.project.pages;
 
 import java.time.Duration;
+import java.util.function.BooleanSupplier;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -23,7 +24,7 @@ public class LoginSignUp extends BasePage{
     @FindBy (css = ".signup-form > h2")
     private WebElement newUserSignUpText;
 
-    @FindBy (css = "login-form > h2")
+    @FindBy (css = ".login-form > h2")
     private WebElement loginToYourAccountText;
 
     @FindBy (css = "input[data-qa='login-email']")
@@ -44,10 +45,9 @@ public class LoginSignUp extends BasePage{
     @FindBy (css = "button[data-qa='signup-button']")
     private WebElement signUpButton;
 
-    @FindBy (xpath = "//form[@action='/signup']//p[contains(normalize-space(.), 'Email Address already exist!')]")
-    private WebElement signupEmailAlreadyExistsErrorText;
-
     private final By closeAdButton = By.id("dismiss-button");
+    private final By signupEmailAlreadyExistsErrorText = By.xpath("//form[@action='/signup']//p[contains(normalize-space(.), 'Email Address already exist!')]");
+    private final By incorrectEmailOrPasswordError = By.xpath("//form[@action='/login']//p[normalize-space()='Your email or password is incorrect!']");
 
     public String getloginToYourAccountText() {
         waitForWebElementToAppear(loginToYourAccountText);
@@ -60,8 +60,8 @@ public class LoginSignUp extends BasePage{
     }
 
     public String getSignUpEmailAlreadyExistsErrorMessage() {
-        waitForWebElementToAppear(signupEmailAlreadyExistsErrorText);
-        return signupEmailAlreadyExistsErrorText.getText();
+        waitForElementToAppear(signupEmailAlreadyExistsErrorText);
+        return driver.findElement(signupEmailAlreadyExistsErrorText).getText();
     }
 
     public ProductCatalog login(String email, String password) {
@@ -97,6 +97,17 @@ public class LoginSignUp extends BasePage{
             JavascriptExecutor js = (JavascriptExecutor) driver;
             js.executeScript("document.getElementById('dismiss-button').click();");
         }
+    }
+
+    public String getEmailwithNoAtSymbolText() {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        return (String) js.executeScript(
+            "return arguments[0].validationMessage;", loginEmailInput);
+    }
+
+    public String getIncorrectEmailOrPasswordErrorText() {
+        waitForElementToAppear(incorrectEmailOrPasswordError);
+        return driver.findElement(incorrectEmailOrPasswordError).getText();
     }
 
 }
