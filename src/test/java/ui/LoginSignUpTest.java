@@ -24,7 +24,7 @@ public class LoginSignUpTest extends BaseTest {
         String newUserSignUpText = loginSignUp.getnewUserSignUpText();
         softAssert.assertEquals(newUserSignUpText, "New User Signup!", "Validating New User SignUp text is present.");
         String userName = "name2";
-        EnterAccountInfo enterAccountInfo = loginSignUp.signUp(userName, "name2777@email.com");
+        EnterAccountInfo enterAccountInfo = loginSignUp.signUp(userName, "name6777@email.com");
         String enterAccountInfoText = enterAccountInfo.getEnterAccountInfoText();
         softAssert.assertEquals(enterAccountInfoText, "ENTER ACCOUNT INFORMATION", "validating Enter Account Information text is present " +
         "Found " + enterAccountInfoText);
@@ -39,12 +39,12 @@ public class LoginSignUpTest extends BaseTest {
         softAssert.assertEquals(userName, loggedInAsUserName, "Validating username is correct in logged in as text.");
         softAssert.assertTrue(loggedInAsText.contains(userName) && loggedInAsText.contains("Logged in as"), 
         "Validating logged in as text is present and has the right username.");
-        /* AccountDeleted accountDeleted = homePage.clickDeleteAccountLink();
+        AccountDeleted accountDeleted = homePage.clickDeleteAccountLink();
         String accountDeletedHeader = accountDeleted.getAccountDeletedHeaderText();
         softAssert.assertEquals(accountDeletedHeader, "ACCOUNT DELETED!", "Validating account deleted header is present.");
         accountDeleted.clickContinue();
         isHomePagePresent = homePage.isHomePageDisplayed();
-        softAssert.assertTrue(isHomePagePresent, "Validating home page is present."); */
+        softAssert.assertTrue(isHomePagePresent, "Validating home page is present.");
         softAssert.assertAll();
     }
 
@@ -94,7 +94,7 @@ public class LoginSignUpTest extends BaseTest {
         String loginToAccountText = loginSignUp.getloginToYourAccountText();
         softAssert.assertEquals(loginToAccountText, "Login to your account", "Validating login to account text.");
         String userName = "name2";
-        loginSignUp.login("name3777@email.com", "pass44");
+        loginSignUp.login("name2777@email.com", "pass44");
         String loggedInAsText = homePage.getLoggedInAsText();
         String loggedInAsUserName = homePage.getloggedInAsUserName();
         softAssert.assertEquals(userName, loggedInAsUserName, "Validating username is correct in logged in as text.");
@@ -105,6 +105,22 @@ public class LoginSignUpTest extends BaseTest {
         softAssert.assertEquals(loginToAccountText2, "Login to your account", "Validating login to account text.");
         String newUserSignUpText = loginSignUp.getnewUserSignUpText();
         softAssert.assertEquals(newUserSignUpText, "New User Signup!", "Validating New User SignUp text is present.");
+        softAssert.assertAll();
+    }
+
+    @Test 
+    public void registerWithExistingEmail() {
+        SoftAssert softAssert = new SoftAssert();
+        launchApplication();
+        boolean isHomePagePresent = homePage.isHomePageDisplayed();
+        softAssert.assertTrue(isHomePagePresent, "Validating home page is present.");
+        LoginSignUp loginSignUp = homePage.clickSignUpLoginLink();
+        String newUserSignUpText = loginSignUp.getnewUserSignUpText();
+        softAssert.assertEquals(newUserSignUpText, "New User Signup!", "Validating New User SignUp text is present.");
+        loginSignUp.signUp("Bob Jones", "name2777@email.com");
+        String signUpemailAlreadyExistsErrorText = loginSignUp.getSignUpEmailAlreadyExistsErrorText();
+        softAssert.assertEquals(signUpemailAlreadyExistsErrorText, "Email Address already exist!", 
+            "Validating sign up email already exists error present.");
         softAssert.assertAll();
     }
 

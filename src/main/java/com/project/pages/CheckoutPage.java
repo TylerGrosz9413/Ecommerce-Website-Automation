@@ -175,7 +175,7 @@ public class CheckoutPage extends BasePage {
         return false;
     }
 
-    public Integer getProductQuantity(String productName) {
+    public int getProductQuantity(String productName) {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
         for (WebElement row : rows) {

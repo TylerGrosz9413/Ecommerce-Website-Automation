@@ -59,7 +59,7 @@ public class LoginSignUp extends BasePage{
         return newUserSignUpText.getText();
     }
 
-    public String getSignUpEmailAlreadyExistsErrorMessage() {
+    public String getSignUpEmailAlreadyExistsErrorText() {
         waitForElementToAppear(signupEmailAlreadyExistsErrorText);
         return driver.findElement(signupEmailAlreadyExistsErrorText).getText();
     }

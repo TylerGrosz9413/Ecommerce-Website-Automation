@@ -48,10 +48,10 @@ public class CartPage extends BasePage {
         return rows.stream().map(row -> row.findElement(productName).getText()).toList();
     }
 
-    public List<String> getProductPrices() {
+    public List<Integer> getProductPrices() {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
-        return rows.stream().map(row -> row.findElement(productUnitPrice).getText()).toList();
+        return rows.stream().map(row -> parsePrice(row.findElement(productUnitPrice).getText())).toList();
     }
 
     public List<Integer> getProductQuantities() {
@@ -60,10 +60,10 @@ public class CartPage extends BasePage {
         return rows.stream().map(row -> Integer.parseInt(row.findElement(productQuantity).getText())).toList();
     }
 
-    public List<String> getProductTotalPrices() {
+    public List<Integer> getProductTotalPrices() {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
-        return rows.stream().map(row -> row.findElement(productTotalPrice).getText()).toList();
+        return rows.stream().map(row -> parsePrice(row.findElement(productTotalPrice).getText())).toList();
     }
 
     public void removeProductFromCart(String productName) {
@@ -111,29 +111,33 @@ public class CartPage extends BasePage {
         return rows.size();
     }
 
-    public String getProductUnitPrice(String productName) {
+    public int getProductUnitPrice(String productName) {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
         for (WebElement row : rows) {
             if (row.findElement(this.productName).getText().equals(productName)) {
-                return row.findElement(productUnitPrice).getText();
+                return parsePrice(row.findElement(productUnitPrice).getText());
             }
         }
         throw new RuntimeException("Product not found in cart: " + productName);
     }
 
-    public String getProductTotalPrice(String productName) {
+    public int getProductTotalPrice(String productName) {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
         for (WebElement row : rows) {
             if (row.findElement(this.productName).getText().equals(productName)) {
-                return row.findElement(productTotalPrice).getText();
+                return parsePrice(row.findElement(productTotalPrice).getText());
             }
         }
         throw new RuntimeException("Product not found in cart: " + productName);
     }
 
-    public Integer getProductQuantity(String productName) {
+    private int parsePrice(String priceText) {
+        return Integer.parseInt(priceText.replaceAll("\\D", ""));
+    }
+
+    public int getProductQuantity(String productName) {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
         for (WebElement row : rows) {

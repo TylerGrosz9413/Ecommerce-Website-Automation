@@ -79,14 +79,14 @@ public class ProductCatalog extends BasePage {
     private final By productsHeader = By.cssSelector(".features_items > h2.title");
     private final By subCategoties = By.cssSelector("a[data-toggle='collapse'] li a");
     private final By addToCartLinkHover = By.cssSelector("a.add-to-cart");
-    private final By productBox = By.cssSelector("div.productinfo");
+    private final By productCard = By.cssSelector("div.productinfo");
     private final By viewProductLink = By.cssSelector("a[href*='/product details/']");
     private final By productPriceBeforeHover = By.cssSelector("div.features_items div.productinfo > h2");
-    private final By productNameBeforeHover = By.cssSelector("div.features_items div.productinfo > p");
-    private final By productPriceHover = By.cssSelector("div.productinfo div.overlay-content > h2");
-    private final By productNameHover = By.cssSelector("div.productinfo div.overlay-content > p");
+    private final By productNameBeforeHover = By.cssSelector("div.productinfo > p");
+    private final By productPriceHover = By.cssSelector("div.product-overlay div.overlay-content > h2");
+    private final By productNameHover = By.cssSelector("div.product-overlay div.overlay-content > p");
     private final By addedToCartPopUp = By.cssSelector("div.modal-content");
-    private final By viewCartAddedToCartPopUp = By.cssSelector("div.modal-content a[href='/view cart']");
+    private final By viewCartAddedToCartPopUp = By.cssSelector("div.modal-content a[href='/view_cart']");
     private final By continueShoppingAddedToCartPopUp = By.cssSelector("div.modal-content button.btn-success");
     private final By addedToCartHeader = By.cssSelector("div.modal-content h4.modal-title");
     private final By addedToCartMessage = By.cssSelector("div.modal-content p");
@@ -260,47 +260,68 @@ public class ProductCatalog extends BasePage {
         return addedToCartPopUpElement.isDisplayed();
     }
 
-    public String getProductNameHover() {
-        waitForElementToAppear(productNameHover);
-        WebElement productNameHoverElement = driver.findElement(productNameHover);
+    public String getProductNameHover(String productName) {
+        WebElement productCard = hoverOverProductCardByName(productName);
+        waitForWebElementToAppear(productCard.findElement(productNameHover));
+        WebElement productNameHoverElement = productCard.findElement(productNameHover);
+        moveCursorAwayFromProductCard();
         return productNameHoverElement.getText();
     }
 
-    public String getProductPriceHover() {
-        waitForElementToAppear(productPriceHover);
-        WebElement productPriceHoverElement = driver.findElement(productPriceHover);
-        return productPriceHoverElement.getText();
+    public int getProductPriceHover(String productName) {
+        WebElement productCard = hoverOverProductCardByName(productName);
+        waitForWebElementToAppear(productCard.findElement(productPriceHover));
+        WebElement productPriceHoverElement = productCard.findElement(productPriceHover);
+        moveCursorAwayFromProductCard();
+        return Integer.parseInt(productPriceHoverElement.getText().replaceAll("\\D", ""));
     }
 
-    public ProductPage clickViewProductLink(String productName) {
+    public ProductDetail clickViewProductLink(String productName) {
         waitForElementToAppear(viewProductLink);
         WebElement viewProductLinkElement = driver.findElement(viewProductLink);
         viewProductLinkElement.click();
-        return new ProductPage(driver);
+        return new ProductDetail(driver);
     }
     
     public void addProductToCartHover(String productName) {
-        hoverOverProductCardByName(productName);
+        WebElement productCard = hoverOverProductCardByName(productName);
         waitForElementToAppear(addToCartLinkHover);
-        WebElement addToCartLink = driver.findElement(addToCartLinkHover);
+        WebElement addToCartLink = productCard.findElement(addToCartLinkHover);
         addToCartLink.click();
+        moveCursorAwayFromProductCard();
     }
 
-    public void hoverOverProductCardByName(String productName) {
-        //List<WebElement> productCards = driver.findElements(By.cssSelector("div.features_items > div.col-sm-4"));
+    public WebElement hoverOverProductCardByName(String productName) {
+        List<WebElement> productCards2 = driver.findElements(By.cssSelector(".productinfo"));
+        waitForWebElementToAppear(productCards.get(0));
+        //WebElement product = driver.findElement(
+        //By.xpath("//div[contains(@class,'productinfo')]//p[normalize-space()='" + productName + "']"));
         Actions actions = new Actions(driver);
+        //actions.moveToElement(product).perform();
         waitForWebElementToAppear(productCards.get(0)); // Wait for at least one product card to appear
-        for (WebElement productCard : productCards) {
-            actions.moveToElement(productCard).perform();
-            waitForWebElementToAppear(productCard.findElement(productNameHover));
+         for (WebElement productCard : productCards) {
+             //actions.moveToElement(productCard).perform();
+             //waitForElementToAppear(productNameBeforeHover);
+             //waitForWebElementToAppear(productCard.findElement(productNameHover));
+             if (productCard.findElement(productNameBeforeHover).getText().equalsIgnoreCase(productName)) {
+                actions.moveToElement(productCard).perform();
+                //WebElement addToCartLink = productCard.findElement(addToCartLinkHover);
+                //addToCartLink.click();
+                return productCard;
+             }
+            //  WebElement hoveredProductName = productCard.findElement(productNameHover);
+            //  if (hoveredProductName.getText().trim().equalsIgnoreCase(productName.trim())) {
+            //      return;
+            //  }
 
-            WebElement hoveredProductName = driver.findElement(productNameHover);
-            if (hoveredProductName.getText().trim().equalsIgnoreCase(productName.trim())) {
-                return;
-            }
-        }
+         }
 
         throw new NoSuchElementException("Product not found on screen after hover: " + productName);
+    }
+
+    public void moveCursorAwayFromProductCard() {
+        waitForWebElementToAppear(searchProductInput);
+        new Actions(driver).moveToElement(searchProductInput).perform();
     }
 
 }
