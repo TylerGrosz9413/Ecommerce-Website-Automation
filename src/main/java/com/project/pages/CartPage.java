@@ -36,9 +36,10 @@ public class CartPage extends BasePage {
     private final By continueOnCartBtnPopUp = By.cssSelector(".modal-content button.close-checkout-modal");
     private final By emptyCartMessage = By.cssSelector("#empty_cart b");
     private final By emptyCartProductsLink = By.cssSelector("#empty_cart a[href='/products']");
+    private final By shoppingCartBreadcrumb = By.cssSelector("#cart_items .breadcrumbs li.active");
 
     public List<WebElement> getProductRows() {
-        waitForWebElementToAppear(productRows.get(0));
+        waitForElementToAppear(shoppingCartBreadcrumb);
         return productRows;
     }
 
@@ -94,7 +95,7 @@ public class CartPage extends BasePage {
     }
 
     public boolean isProductInCart(String productName) {
-        waitForWebElementToAppear(productRows.get(0));
+        waitForElementToAppear(shoppingCartBreadcrumb);
         List<WebElement> rows = getProductRows();
         for (WebElement row : rows) {
             if (row.findElement(this.productName).getText().equals(productName)) {
@@ -105,13 +106,13 @@ public class CartPage extends BasePage {
     }
 
     public boolean isCartEmpty() {
-        waitForWebElementToAppear(productRows.get(0));
+        waitForElementToAppear(shoppingCartBreadcrumb);
         List<WebElement> rows = getProductRows();
         return rows.isEmpty();
     }
 
     public int getNumberOfProductsInCart() {
-        waitForWebElementToAppear(productRows.get(0));
+        waitForElementToAppear(shoppingCartBreadcrumb);
         List<WebElement> rows = getProductRows();
         return rows.size();
     }

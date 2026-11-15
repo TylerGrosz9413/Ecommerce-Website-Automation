@@ -130,4 +130,28 @@ public class CartTest extends BaseTest {
         softAssert.assertAll();
     }
 
+    @Test 
+    public void emptyCart() {
+        SoftAssert softAssert = new SoftAssert();
+        launchApplication();
+        boolean isHomePagePresent = homePage.isHomePageDisplayed();
+        softAssert.assertTrue(isHomePagePresent, "Validating home page is present.");
+        CartPage cartPage = homePage.clickCartLink();
+        int countOfItemsInCart = cartPage.getNumberOfProductsInCart();
+        softAssert.assertEquals(countOfItemsInCart, 0, "Validating there are no items in the cart.");
+        boolean isCartEmpty = cartPage.isCartEmpty();
+        softAssert.assertTrue(isCartEmpty, "Validating the cart is empty.");
+        String emptyCartMessage = cartPage.getEmptyCartMessage();
+        String expectedEmptyCartMessage = "Cart is empty!";
+        softAssert.assertEquals(emptyCartMessage, expectedEmptyCartMessage, 
+            "Validating empty cart message appears as expected."
+        );
+        ProductCatalog productCatalog = cartPage.clickEmptyCartProductsLink();
+        boolean isProductCatalogPageDisplayed = productCatalog.isProductCatalogPageDisplayed();
+        softAssert.assertTrue(isProductCatalogPageDisplayed, "Validating Product Catalog page is displayed.");
+        String productsHeaderText = productCatalog.getProductsHeaderText();
+        softAssert.assertEquals(productsHeaderText, "ALL PRODUCTS", "Validating Product Catalog header is displayed correctly.");
+        softAssert.assertAll();
+    }
+
 }

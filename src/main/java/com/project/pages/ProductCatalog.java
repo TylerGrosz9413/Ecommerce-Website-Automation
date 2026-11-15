@@ -105,6 +105,10 @@ public class ProductCatalog extends BasePage {
         return driver .findElement(productsHeader).getText();
     }
 
+    public boolean isProductCatalogPageDisplayed() {
+        return driver.findElement(productsHeader).isDisplayed();
+    }
+
     public void clickWomenCategoryHeaderToggle() {
         waitForWebElementToBeClickable(womenCategoryHeaderToggle);
         womenCategoryHeaderToggle.click();
