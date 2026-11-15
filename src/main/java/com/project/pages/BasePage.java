@@ -23,7 +23,7 @@ public class BasePage {
     @FindBy (css = "a[href='/products']")
     private WebElement productsLink;
 
-    @FindBy (css = "a[href='/view cart']")
+    @FindBy (css = "a[href='/view_cart']")
     private WebElement cartLink;
 
     /* @FindBy (css = "a[href='/logout']")
@@ -32,16 +32,16 @@ public class BasePage {
     /* @FindBy (css = "a[href='/delete account']")
     WebElement deleteAccount; */
 
-    @FindBy (css = "a[href='/test cases']")
+    @FindBy (css = "a[href='/test_cases']")
     private WebElement testcasesLink;
 
-    @FindBy (css = "a[href='/api list']")
+    @FindBy (css = "a[href='/api_list']")
     private WebElement apiTestingLink;
 
     @FindBy (css = "a[href='/https://www.youtube.com/c/AutomationExercise']")
     private WebElement videoTutorialsLink;
 
-    @FindBy (css = "a[href='/contact us']")
+    @FindBy (css = "a[href='/contact_us']")
     private WebElement contactUsLink;
 
     /* @FindBy (css = "i[class='fa fa-user'] > b")
@@ -137,6 +137,16 @@ public class BasePage {
         String loggedInAsText = driver.findElement(loggedInAsNonNavigableLink).getText();
         String username = loggedInAsText.split("Logged in as ")[1].trim();
         return username;
+    }
+
+    public void scrollToBottom() {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+    }
+
+    public void scrollToTop() {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollTo(0, 0);");
     }
 
     public void closeAdIfPresent() {

@@ -20,7 +20,7 @@ public class CartPage extends BasePage {
     @FindBy (css = "div.breadcrumbs a")
     private WebElement homeLink;
 
-    @FindBy (css = ".check out")
+    @FindBy (css = ".check_out")
     private WebElement checkoutLink;
 
     @FindBy (css = "tr[id*='product']")
@@ -66,12 +66,17 @@ public class CartPage extends BasePage {
         return rows.stream().map(row -> parsePrice(row.findElement(productTotalPrice).getText())).toList();
     }
 
+    public boolean isCartPageDisplayed() {
+        return checkoutLink.isDisplayed();
+    }
+
     public void removeProductFromCart(String productName) {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
         for (WebElement row : rows) {
             if (row.findElement(this.productName).getText().equals(productName)) {
                 row.findElement(removeProductLink).click();
+                waitForWebElementToDisappear(row);
                 break;
             }
         }

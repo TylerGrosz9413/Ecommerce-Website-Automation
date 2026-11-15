@@ -80,7 +80,7 @@ public class ProductCatalog extends BasePage {
     private final By subCategoties = By.cssSelector("a[data-toggle='collapse'] li a");
     private final By addToCartLinkHover = By.cssSelector("a.add-to-cart");
     private final By productCard = By.cssSelector("div.productinfo");
-    private final By viewProductLink = By.cssSelector("a[href*='/product details/']");
+    private final By viewProductLink = By.cssSelector("a[href*='/product_details/']");
     private final By productPriceBeforeHover = By.cssSelector("div.features_items div.productinfo > h2");
     private final By productNameBeforeHover = By.cssSelector("div.productinfo > p");
     private final By productPriceHover = By.cssSelector("div.product-overlay div.overlay-content > h2");
@@ -276,9 +276,20 @@ public class ProductCatalog extends BasePage {
         return Integer.parseInt(productPriceHoverElement.getText().replaceAll("\\D", ""));
     }
 
+    public WebElement getProductCard(String productName) {
+        waitForWebElementToAppear(productCards.get(0));
+        for (WebElement productCard : productCards) {
+            if (productCard.findElement(productNameBeforeHover).getText().equalsIgnoreCase(productName)) {
+                return productCard;
+            }
+        }
+        throw new NoSuchElementException("Product not found on screen: " + productName);
+    }
+
     public ProductDetail clickViewProductLink(String productName) {
-        waitForElementToAppear(viewProductLink);
-        WebElement viewProductLinkElement = driver.findElement(viewProductLink);
+        WebElement productCard = getProductCard(productName);
+        waitForWebElementToAppear(productCard);
+        WebElement viewProductLinkElement = productCard.findElement(viewProductLink);
         viewProductLinkElement.click();
         return new ProductDetail(driver);
     }

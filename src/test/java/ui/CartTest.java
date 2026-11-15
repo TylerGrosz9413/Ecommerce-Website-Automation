@@ -76,8 +76,57 @@ public class CartTest extends BaseTest {
         productDetail.addProductToCart();
         CartPage cartPage = productDetail.clickViewCartInAddedToCartPopUp();
         boolean isProductInCart = cartPage.isProductInCart("Stylish Dress");
+        softAssert.assertTrue(isProductInCart, "Validating product is in cart.");
         int productQuantityInCart = cartPage.getProductQuantity("Stylish Dress");
         softAssert.assertEquals(productQuantityInCart, 4, "Validating product quantity on cart page is correct.");
+        softAssert.assertAll();
+    }
+
+    @Test 
+    public void removeItemsFromCart() {
+        SoftAssert softAssert = new SoftAssert();
+        launchApplication();
+        boolean isHomePagePresent = homePage.isHomePageDisplayed();
+        softAssert.assertTrue(isHomePagePresent, "Validating home page is present.");
+        ProductCatalog productCatalog = homePage.clickProductsLink();
+        productCatalog.addProductToCartHover("Blue Top");
+        productCatalog.clickContinueShoppingInAddedToCartPopUp();
+        productCatalog.addProductToCartHover("Winter Top");
+        productCatalog.clickContinueShoppingInAddedToCartPopUp();
+        productCatalog.addProductToCartHover("Green Side Placket Detail T-Shirt");
+        productCatalog.clickContinueShoppingInAddedToCartPopUp();
+        CartPage cartPage = productCatalog.clickCartLink();
+        boolean cartPageDisplayed = cartPage.isCartPageDisplayed();
+        softAssert.assertTrue(cartPageDisplayed, "Validating cart page is displayed.");
+        int cartItems = cartPage.getNumberOfProductsInCart();
+        softAssert.assertEquals(cartItems, 3, "Validating number of products in cart.");
+        boolean blueTopInCart = cartPage.isProductInCart("Blue Top");
+        softAssert.assertTrue(blueTopInCart, "Validating Blue Top is in cart.");
+        cartPage.removeProductFromCart("Blue Top");
+        cartItems = cartPage.getNumberOfProductsInCart();
+        softAssert.assertEquals(cartItems, 2, "Validating number of items in cart after removing a product.");
+        blueTopInCart = cartPage.isProductInCart("Blue Top");
+        softAssert.assertFalse(blueTopInCart, "Validating Blue Top is no longer in cart.");
+        softAssert.assertAll();
+    }
+
+    @Test 
+    public void addToCartFromRecommendedItems() {
+        SoftAssert softAssert = new SoftAssert();
+        launchApplication();
+        boolean isHomePagePresent = homePage.isHomePageDisplayed();
+        softAssert.assertTrue(isHomePagePresent, "Validating home page is present.");
+        homePage.scrollToBottom();
+        String recommendedItemsHeaderText = homePage.getRecommendedItemsHeaderText();
+        softAssert.assertEquals(recommendedItemsHeaderText, "RECOMMENDED ITEMS", 
+            "Validating 'recommended items' header text is present."
+        );
+        boolean recommendedItemsCarouselPresent = homePage.isRecommendedItemsCarouselDisplayed();
+        softAssert.assertTrue(recommendedItemsCarouselPresent);
+        homePage.addProductToCartFromRecommendedItems("Men Tshirt");
+        CartPage cartPage = homePage.clickCartLink();
+        boolean isRecommendedProductInCart = cartPage.isProductInCart("Men Tshirt");
+        softAssert.assertTrue(isRecommendedProductInCart);
         softAssert.assertAll();
     }
 

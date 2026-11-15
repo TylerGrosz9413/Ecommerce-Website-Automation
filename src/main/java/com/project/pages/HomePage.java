@@ -39,8 +39,8 @@ public class HomePage extends ProductCatalog {
     @FindBy (css = ".right")
     private WebElement slideRightRecommendedItemControl;
 
-    private final By productNameInCard = By.cssSelector("div.productinfo > p");
-    private final By productPriceInCard = By.cssSelector("div.productinfo > h2");
+    private final By productNameInCard = By.cssSelector("p");
+    private final By productPriceInCard = By.cssSelector("h2");
     private final By productCard = By.cssSelector("div.productinfo");
     private final By addToCartLink = By.cssSelector("a.add-to-cart");
 
@@ -102,12 +102,17 @@ public class HomePage extends ProductCatalog {
         throw new RuntimeException("Product not found: " + productName);
     }
 
-    public void addProductToCart(String productName) {
+    public void addProductToCartFromRecommendedItems(String productName) {
         waitForWebElementToAppear(recommendedItemsCarouselDiv);
         List<WebElement> productCards = getRecommendedItemsProductCards();
+        System.out.println(productCards.size());
+        System.out.println(getRecommendedItemsProductNames());
+        System.out.println(getVisibleRecommendedItemsProductCards().size());
         WebElement productCard = null;
         for (WebElement card : productCards) {
-            if (card.findElement(productNameInCard).getText().equals(productName)) {
+            String cardName = card.findElement(productNameInCard)
+            .getAttribute("textContent").trim();
+            if (cardName.equalsIgnoreCase(productName.trim())) {
                 productCard = card;
                 break;
             }
@@ -134,7 +139,6 @@ public class HomePage extends ProductCatalog {
     }
 
     public boolean isRecommendedItemsCarouselDisplayed() {
-        waitForWebElementToAppear(recommendedItemsCarouselDiv);
         return recommendedItemsCarouselDiv.isDisplayed();
     }
 
