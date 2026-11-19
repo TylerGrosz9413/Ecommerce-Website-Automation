@@ -47,6 +47,9 @@ public class BasePage {
     /* @FindBy (css = "i[class='fa fa-user'] > b")
     WebElement loggedInAs; */
 
+    @FindBy (xpath = "//div[@class='single-widget']/h2[text()='Subscription']")
+    private WebElement subscriptionHeader;
+
     @FindBy (css = "#susbscribe_email")
     private WebElement subscribeEmailInput;
 
@@ -58,6 +61,7 @@ public class BasePage {
     private final By loggedInAsUsername = By.cssSelector("i.fa-user + b");
     private final By loggedInAsNonNavigableLink = By.xpath("//a[.//i[contains(concat(' ', normalize-space(@class), ' '), ' fa-user ')]]");
     private final By signUpLoginLink = By.cssSelector("a[href='/login']");
+    private final By subscriptionSuccessMessage = By.cssSelector(".alert-success");
     
     public BasePage(WebDriver driver) {
         this.driver = driver;
@@ -122,7 +126,7 @@ public class BasePage {
     public void subscribeWithEmail(String email) {
         waitForWebElementToAppear(subscribeEmailInput);
         subscribeEmailInput.sendKeys(email);
-        waitForWebElementToAppear(subscribeButton);
+        waitForWebElementToBeClickable(subscribeButton);
         subscribeButton.click();
     }
 
@@ -139,6 +143,16 @@ public class BasePage {
         return username;
     }
 
+    public String getSubscriptionHeader() {
+        waitForWebElementToAppear(subscriptionHeader);
+        return subscriptionHeader.getText();
+    }
+
+    public String getSubscriptionSuccessMessage() {
+        waitForElementToAppear(subscriptionSuccessMessage);
+        return driver.findElement(subscriptionSuccessMessage).getText();
+    }
+
     public void scrollToBottom() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
@@ -149,43 +163,10 @@ public class BasePage {
         js.executeScript("window.scrollTo(0, 0);");
     }
 
-    public void closeAdIfPresent() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        // 1) Try to close known ad close buttons
-        List<By> closeButtonLocators = List.of(
-            By.id("dismiss-button"),
-            By.cssSelector("#dismiss-button"),
-            By.cssSelector("[id*='dismiss-button']"),
-            By.cssSelector("[class*='close-button']"),
-            By.cssSelector("button.close"),
-            By.xpath("//*[contains(@id, 'dismiss') or contains(@class, 'close-button')]")
-        );
-
-        for (By locator : closeButtonLocators) {
-            try {
-                List<WebElement> elements = driver.findElements(locator);
-                for (WebElement el : elements) {
-                    try {
-                        if (el.isDisplayed()) {
-                            wait.until(ExpectedConditions.elementToBeClickable(el)).click();
-                            return;
-                        }
-                    } catch (Exception ignored) {
-                    }
-                }
-            } catch (Exception ignored) {
-            }
-        }
-
-        // 2) If ad iframe is still covering the page, hide it
+    public String getSubscriptionEmailWithNoAtSymbolText() {
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript(
-            "var elements = document.querySelectorAll('iframe[id*=\"aswift\"], iframe[id*=\"google_ads_iframe\"], [id*=\"ad\"], [class*=\"ad\"]'); " +
-            "for (var i = 0; i < elements.length; i++) { " +
-            "   try { elements[i].style.display = 'none'; } catch (e) {} " +
-            "}"
-        );
+        return (String) js.executeScript(
+            "return arguments[0].validationMessage;", subscribeEmailInput);
     }
 
     public void waitForElementToAppear(By locator) {

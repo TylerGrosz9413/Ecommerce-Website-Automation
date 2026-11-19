@@ -1,10 +1,16 @@
 package com.project.pages;
 
+import java.time.Duration;
+import java.util.Map;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chromium.HasCdp;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PaymentPage extends BasePage {
     WebDriver driver;
@@ -39,7 +45,33 @@ public class PaymentPage extends BasePage {
     @FindBy (css = "button.submit-button")
     private WebElement payAndConfirmOrderButton;
 
-    private final By successMessage = By.cssSelector("div.alert-success");
+    private static final String SUCCESS_MESSAGE_STORAGE_KEY = "paymentSuccessMessage";
+    private static final String SUCCESS_MESSAGE_SELECTOR = "#success_message .alert-success";
+    private static final String SUCCESS_MESSAGE_OBSERVER_SCRIPT = """
+        (() => {
+            const storageKey = "%s";
+            const selector = "%s";
+            const capture = () => {
+                const message = document.querySelector(selector);
+                const text = message ? message.textContent.trim() : "";
+                if (text) {
+                    window.sessionStorage.setItem(storageKey, text);
+                    observer.disconnect();
+                }
+            };
+            const observer = new MutationObserver(capture);
+            observer.observe(document, {
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+            window.__paymentSuccessObserver = observer;
+            capture();
+            document.addEventListener("DOMContentLoaded", capture, { once: true });
+        })();
+        """.formatted(SUCCESS_MESSAGE_STORAGE_KEY, SUCCESS_MESSAGE_SELECTOR);
+
+    private String capturedSuccessMessage;
 
     public String getPaymentHeader() {
         waitForWebElementToAppear(paymentHeader);
@@ -55,9 +87,55 @@ public class PaymentPage extends BasePage {
         expirationYearinput.sendKeys(expirationYear);
     }
 
-    public void clickPayAndConfirmOrderButton() {
+    public OrderConfirmationPage clickPayAndConfirmOrderButton() {
         waitForWebElementToAppear(payAndConfirmOrderButton);
-        payAndConfirmOrderButton.click();
+
+        if (!(driver instanceof HasCdp cdp)) {
+            throw new IllegalStateException("Transient payment success capture requires a Chromium WebDriver.");
+        }
+
+        JavascriptExecutor javascript = (JavascriptExecutor) driver;
+        javascript.executeScript(
+            "window.sessionStorage.removeItem(arguments[0]);",
+            SUCCESS_MESSAGE_STORAGE_KEY
+        );
+        javascript.executeScript(SUCCESS_MESSAGE_OBSERVER_SCRIPT);
+        String observerId = registerSuccessMessageObserver(cdp);
+
+        try {
+            payAndConfirmOrderButton.click();
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+            wait.pollingEvery(Duration.ofMillis(100));
+            capturedSuccessMessage = wait.until(webDriver ->
+                (String) ((JavascriptExecutor) webDriver).executeScript(
+                    "return window.sessionStorage.getItem(arguments[0]);",
+                    SUCCESS_MESSAGE_STORAGE_KEY
+                )
+            );
+        } finally {
+            cdp.executeCdpCommand(
+                "Page.removeScriptToEvaluateOnNewDocument",
+                Map.of("identifier", observerId)
+            );
+        }
+
+        javascript.executeScript(
+            "window.sessionStorage.removeItem(arguments[0]);",
+            SUCCESS_MESSAGE_STORAGE_KEY
+        );
+        return new OrderConfirmationPage(driver);
+    }
+
+    private String registerSuccessMessageObserver(HasCdp cdp) {
+        Object result = cdp.executeCdpCommand(
+            "Page.addScriptToEvaluateOnNewDocument",
+            Map.of("source", SUCCESS_MESSAGE_OBSERVER_SCRIPT)
+        );
+        if (result instanceof Map<?, ?> response
+            && response.get("identifier") instanceof String identifier) {
+            return identifier;
+        }
+        throw new IllegalStateException("Chromium did not return an observer script identifier.");
     }
 
     public String getNameOnCard() {
@@ -92,7 +170,9 @@ public class PaymentPage extends BasePage {
     }
 
     public String getSuccessMessage() {
-        waitForElementToAppear(successMessage);
-        return driver.findElement(successMessage).getText();
+        if (capturedSuccessMessage == null) {
+            throw new IllegalStateException("Success message has not been captured yet.");
+        }
+        return capturedSuccessMessage;
     }
 }

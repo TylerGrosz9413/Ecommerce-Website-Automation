@@ -74,13 +74,14 @@ public class LoginSignUpTest extends BaseTest {
         String loginToAccountText = loginSignUp.getloginToYourAccountText();
         softAssert.assertEquals(loginToAccountText, "Login to your account", "Validating login to account text.");
         loginSignUp.login("email", "password");
+        String expectedNoAtSymbolError = "Please include an '@' in the email address. 'email' is missing an '@'.";
         String loginEmailWithNoAtSymbolErrorText = loginSignUp.getEmailwithNoAtSymbolText();
-        boolean correctLoginErrorText = loginEmailWithNoAtSymbolErrorText.contains("Please include an '@' in the email address.");
-        softAssert.assertTrue(correctLoginErrorText, "Validating the '@' symbol error message is correctly populating for login.");
+        softAssert.assertEquals(loginEmailWithNoAtSymbolErrorText, expectedNoAtSymbolError, 
+            "Validating the '@' symbol error message is correctly populating for login.");
         loginSignUp.signUp("name", "email");
         String signUpEmailWithNoAtSymbolErrorText = loginSignUp.getEmailwithNoAtSymbolText();
-        boolean correctSignUpErrorText = signUpEmailWithNoAtSymbolErrorText.contains("Please include an '@' in the email address.");
-        softAssert.assertTrue(correctSignUpErrorText, "Validating the '@' symbol error message is correctly populating for sign up.");
+        softAssert.assertEquals(signUpEmailWithNoAtSymbolErrorText, expectedNoAtSymbolError, 
+             "Validating the '@' symbol error message is correctly populating for sign up.");
         softAssert.assertAll();
     }
 

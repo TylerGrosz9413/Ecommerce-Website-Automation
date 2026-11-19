@@ -23,7 +23,7 @@ public class OrderConfirmationPage extends BasePage {
     @FindBy (css = "h2.title b")
     private WebElement orderPlacedText;
 
-    @FindBy (css = "h2.title p")
+    @FindBy (css = "h2.title + p")
     private WebElement confirmationMessageText;
 
     public String getOrderPlacedText() {

@@ -335,8 +335,8 @@ public class ProductCatalog extends BasePage {
     }
 
     public void moveCursorAwayFromProductCard() {
-        waitForWebElementToAppear(searchProductInput);
-        new Actions(driver).moveToElement(searchProductInput).perform();
+        waitForWebElementToAppear(womenCategoryHeaderToggle);
+        new Actions(driver).moveToElement(womenCategoryHeaderToggle).perform();
     }
 
 }

@@ -99,6 +99,7 @@ public class EnterAccountInfo extends BasePage {
         waitForWebElementToAppear(firstNameInput);
         firstNameInput.sendKeys(firstName);
         lastNameInput.sendKeys(lastName);
+        companyInput.sendKeys(company);
         address1Input.sendKeys(address1);
         address2Input.sendKeys(address2);
         selectDropdownOptionByVisibleText(countryDropdown, country);

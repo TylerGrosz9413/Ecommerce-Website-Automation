@@ -39,7 +39,7 @@ public class CartPage extends BasePage {
     private final By shoppingCartBreadcrumb = By.cssSelector("#cart_items .breadcrumbs li.active");
 
     public List<WebElement> getProductRows() {
-        waitForElementToAppear(shoppingCartBreadcrumb);
+        waitForWebElementToAppear(checkoutLink);
         return productRows;
     }
 
@@ -95,7 +95,7 @@ public class CartPage extends BasePage {
     }
 
     public boolean isProductInCart(String productName) {
-        waitForElementToAppear(shoppingCartBreadcrumb);
+        waitForWebElementToAppear(checkoutLink);
         List<WebElement> rows = getProductRows();
         for (WebElement row : rows) {
             if (row.findElement(this.productName).getText().equals(productName)) {
@@ -106,13 +106,13 @@ public class CartPage extends BasePage {
     }
 
     public boolean isCartEmpty() {
-        waitForElementToAppear(shoppingCartBreadcrumb);
+        waitForWebElementToAppear(checkoutLink);
         List<WebElement> rows = getProductRows();
         return rows.isEmpty();
     }
 
     public int getNumberOfProductsInCart() {
-        waitForElementToAppear(shoppingCartBreadcrumb);
+        waitForWebElementToAppear(checkoutLink);
         List<WebElement> rows = getProductRows();
         return rows.size();
     }
@@ -211,6 +211,12 @@ public class CartPage extends BasePage {
         waitForElementToBeClickable(emptyCartProductsLink);
         driver.findElement(emptyCartProductsLink).click();
         return new ProductCatalog(driver);
+    }
+
+    public CheckoutPage waitForCheckoutPage() {
+        By placeOrderLink = By.cssSelector("a[href='/payment']");
+        waitForElementToAppear(placeOrderLink);
+        return new CheckoutPage(driver);
     }
 
 }

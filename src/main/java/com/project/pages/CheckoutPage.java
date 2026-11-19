@@ -1,5 +1,6 @@
 package com.project.pages;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -7,6 +8,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class CheckoutPage extends BasePage {
     WebDriver driver;
@@ -20,43 +22,43 @@ public class CheckoutPage extends BasePage {
     @FindBy (css = "div.breadcrumbs a")
     private WebElement homeLink;
 
-    @FindBy (css = "li.address_firstname")
+    @FindBy (css = "#address_delivery li.address_firstname")
     private WebElement customerNameDelivery;
 
-    @FindBy (css = "li.address_address1:nth-child(2)")
-    private WebElement customerAddressDelivery;
+    private final By customerAddressDelivery =
+        By.cssSelector("#address_delivery li.address_address1.address_address2");
 
-    @FindBy (css = "li.address_city")
+    @FindBy (css = "#address_delivery li.address_city")
     private WebElement customerCityStateZipDelivery;
 
-    @FindBy (css = "li.address_country_name")
+    @FindBy (css = "#address_delivery li.address_country_name")
     private WebElement customercountryNameDelivery;
 
-    @FindBy (css = "li.address_phone")
+    @FindBy (css = "#address_delivery li.address_phone")
     private WebElement customerPhonenumberDelivery;
 
-    @FindBy (css = "li.address_firstname")
+    @FindBy (css = "#address_invoice li.address_firstname")
     private WebElement customerNameBilling;
 
-    @FindBy (css = "li.address_address1:nth-child(2)")
-    private WebElement customerAddressBilling;
+    private final By customerAddressBilling =
+        By.cssSelector("#address_invoice li.address_address1.address_address2");
 
-    @FindBy (css = "li.address_city")
+    @FindBy (css = "#address_invoice li.address_city")
     private WebElement customerCityStateZipBilling;
 
-    @FindBy (css = "li.address_country_name")
+    @FindBy (css = "#address_invoice li.address_country_name")
     private WebElement customercountryNameBilling;
 
-    @FindBy (css = "li.address_phone")
+    @FindBy (css = "#address_invoice li.address_phone")
     private WebElement customerPhonenumberBilling;
 
     @FindBy (css = "tr[id*='product']")
     private List<WebElement> productRows;
 
-    @FindBy (css = "p.cart_total_price")
+    @FindBy (css = "td[colspan='2'] + td p.cart_total_price")
     private WebElement cartTotalPrice;
 
-    @FindBy (css = "div.ordermsg textarea")
+    @FindBy (css = "#ordermsg textarea")
     private WebElement orderCommentInput;
 
     @FindBy (css = "a[href='/payment']")
@@ -79,10 +81,10 @@ public class CheckoutPage extends BasePage {
         return rows.stream().map(row -> row.findElement(productName).getText()).toList();
     }
 
-    public List<String> getProductUnitPrices() {
+    public List<Integer> getProductUnitPrices() {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
-        return rows.stream().map(row -> row.findElement(productUnitPrice).getText()).toList();
+        return rows.stream().map(row -> parsePrice(row.findElement(productUnitPrice).getText())).toList();
     }
 
     public List<Integer> getProductQuantities() {
@@ -91,10 +93,10 @@ public class CheckoutPage extends BasePage {
         return rows.stream().map(row -> Integer.parseInt(row.findElement(productQuantity).getText())).toList();
     }
 
-    public List<String> getProductTotalPrices() {
+    public List<Integer> getProductTotalPrices() {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
-        return rows.stream().map(row -> row.findElement(productTotalPrice).getText()).toList();
+        return rows.stream().map(row -> parsePrice(row.findElement(productTotalPrice).getText())).toList();
     }
 
     public void enterOrderComment(String comment) {
@@ -103,9 +105,10 @@ public class CheckoutPage extends BasePage {
         orderCommentInput.sendKeys(comment);
     }
 
-    public void clickPlaceOrder() {
+    public PaymentPage clickPlaceOrder() {
         waitForWebElementToAppear(placeOrderLink);
         placeOrderLink.click();
+        return new PaymentPage(driver);
     }
 
     public String getCustomerNameDelivery() {
@@ -114,8 +117,7 @@ public class CheckoutPage extends BasePage {
     }
 
     public String getCustomerAddressDelivery() {
-        waitForWebElementToAppear(customerAddressDelivery);
-        return customerAddressDelivery.getText();
+        return getAddressText(customerAddressDelivery);
     }
 
     public String getCustomerCityStateZipDelivery() {
@@ -139,8 +141,7 @@ public class CheckoutPage extends BasePage {
     }
 
     public String getCustomerAddressBilling() {
-        waitForWebElementToAppear(customerAddressBilling);
-        return customerAddressBilling.getText();
+        return getAddressText(customerAddressBilling);
     }
 
     public String getCustomerCityStateZipBilling() {
@@ -186,23 +187,23 @@ public class CheckoutPage extends BasePage {
         throw new RuntimeException("Product not found in checkout: " + productName);
     }
 
-    public String getProductUnitPrice(String productName) {
+    public int getProductUnitPrice(String productName) {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
         for (WebElement row : rows) {
             if (row.findElement(this.productName).getText().equals(productName)) {
-                return row.findElement(productUnitPrice).getText();
+                return parsePrice(row.findElement(productUnitPrice).getText());
             }
         }
         throw new RuntimeException("Product not found in checkout: " + productName);
     }
 
-    public String getProductTotalPrice(String productName) {
+    public int getProductTotalPrice(String productName) {
         waitForWebElementToAppear(productRows.get(0));
         List<WebElement> rows = getProductRows();
         for (WebElement row : rows) {
             if (row.findElement(this.productName).getText().equals(productName)) {
-                return row.findElement(productTotalPrice).getText();
+                return parsePrice(row.findElement(productTotalPrice).getText());
             }
         }
         throw new RuntimeException("Product not found in checkout: " + productName);
@@ -247,9 +248,24 @@ public class CheckoutPage extends BasePage {
         return orderCommentInput.getAttribute("value");
     }
 
-    public String getCartTotalPrice() {
+    public int getCartTotalPrice() {
         waitForWebElementToAppear(cartTotalPrice);
-        return cartTotalPrice.getText();
+        return parsePrice(cartTotalPrice.getText());
+    }
+
+    private int parsePrice(String priceText) {
+        return Integer.parseInt(priceText.replaceAll("\\D", ""));
+    }
+
+    private String getAddressText(By addressLinesLocator) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(webDriver -> webDriver.findElements(addressLinesLocator).stream()
+            .anyMatch(addressLine -> addressLine.isDisplayed() && !addressLine.getText().isBlank()));
+        return String.join(" ", driver.findElements(addressLinesLocator).stream()
+            .filter(WebElement::isDisplayed)
+            .map(WebElement::getText)
+            .filter(text -> !text.isBlank())
+            .toList());
     }
 
 }

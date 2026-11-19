@@ -110,4 +110,8 @@ public class LoginSignUp extends BasePage{
         return driver.findElement(incorrectEmailOrPasswordError).getText();
     }
 
+    public boolean isLoginSignUpPageDisplayed() {
+        return loginEmailInput.isDisplayed();
+    }
+
 }
